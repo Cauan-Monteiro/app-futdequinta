@@ -1,0 +1,35 @@
+services:
+  mysqldb:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Cauan@0272  # Senha do administrador (root)
+      MYSQL_DATABASE: stats_data       # Nome do banco de dados que sua API usa
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+  
+  api:
+    build: ./API          # Onde está o Dockerfile do Java
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysqldb           # Espera o banco iniciar primeiro
+    environment:
+      # Lembre-se: jdbc:mysql://[QUEM_É_O_HOST]:3306/[NOME_DO_BANCO]
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stats_data
+      SPRING_DATASOURCE_USERNAME: root  # Use o mesmo usuário definido no mysqldb
+      SPRING_DATASOURCE_PASSWORD: Cauan@0272  # Use a mesma senha definida no mysqldb
+  
+  frontend:
+    build: ./FutQuinta         # Onde está o Dockerfile do frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  mysql_data:
