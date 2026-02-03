@@ -48,3 +48,12 @@ dist/
 # Configurações de IDE e Sistema
 .idea/
 .DS_Store
+
+#chaves SSH
+*.pub
+*.pub.key
+/chavesSSH/
+chavesSSH/*.txt
+
+#Docker 
+docker-compose.yaml
