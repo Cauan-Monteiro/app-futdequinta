@@ -87,7 +87,11 @@ function App() {
   }
   const [partidasSalvas, setPartidasSalvas] = useState<PartidaSalva[]>([])
 
-  partidasSalvas.sort((a, b) => a.data.getDate() - b.data.getDate())
+  //Ordena as partidas por data
+  partidasSalvas.sort((a, b) => {const dataA = new Date(a.data).getTime();
+    const dataB = new Date(b.data).getTime();
+    return dataA - dataB;
+    });
 
   // Função para iniciar edição de um jogador
   const iniciarEdicao = (jogador: Jogador) => {
