@@ -89,8 +89,22 @@ function App() {
 
   // Função para iniciar edição de um jogador
   const iniciarEdicao = (jogador: Jogador) => {
-    alert("Esta ação requer permissões de administrador!")
-    console.log("Impossivel alterar os dados de"+jogador.nome);
+    const userInput: string | null = window.prompt("Please enter password: ");
+
+    if(userInput == "admin5678"){
+      setJogadorEditando(jogador)
+      setFormData({
+        nome: jogador.nome,
+        pontos: jogador.pontos,
+        partidas: jogador.partidas,
+        vitorias: jogador.vitorias,
+        empates: jogador.empates,
+        derrotas: jogador.derrotas,
+      })
+    } else {
+      alert("Esta ação requer permissões de administrador!")
+      console.log("Impossivel alterar os dados de "+jogador.nome+", ID: "+jogador.id);
+    }
   }
 
   // const iniciarEdicao = (jogador: Jogador) => {
