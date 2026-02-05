@@ -3,6 +3,7 @@ import './App.css'
 import logo from './assets/futebol de quinta_nova_bg.png'
 
 const API_URL = import.meta.env.VITE_API_URL
+const PASS = import.meta.env.ADMIN_PASSWORD
 
 // Interface para definir a estrutura dos dados de um jogador
 interface Jogador {
@@ -97,7 +98,7 @@ function App() {
   const iniciarEdicao = (jogador: Jogador) => {
     const userInput: string | null = window.prompt("Please enter password: ");
 
-    if(userInput == "admin5678"){
+    if(userInput == PASS){
       setJogadorEditando(jogador)
       setFormData({
         nome: jogador.nome,
@@ -206,7 +207,7 @@ function App() {
     
     //Verifica admin
     const userInput: string | null = window.prompt("Please enter password: ");
-    if(userInput !== "admin5678"){
+    if(userInput !== PASS){
       alert("Esta ação requer permissões de administrador!")
       console.log("Impossivel salvar partida!");
     } else {
