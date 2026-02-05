@@ -87,6 +87,8 @@ function App() {
   }
   const [partidasSalvas, setPartidasSalvas] = useState<PartidaSalva[]>([])
 
+  partidasSalvas.sort((a, b) => a.data.getDate() - b.data.getDate())
+
   // Função para iniciar edição de um jogador
   const iniciarEdicao = (jogador: Jogador) => {
     const userInput: string | null = window.prompt("Please enter password: ");
@@ -106,18 +108,6 @@ function App() {
       console.log("Impossivel alterar os dados de "+jogador.nome+", ID: "+jogador.id);
     }
   }
-
-  // const iniciarEdicao = (jogador: Jogador) => {
-  //   setJogadorEditando(jogador)
-  //   setFormData({
-  //     nome: jogador.nome,
-  //     pontos: jogador.pontos,
-  //     partidas: jogador.partidas,
-  //     vitorias: jogador.vitorias,
-  //     empates: jogador.empates,
-  //     derrotas: jogador.derrotas,
-  //   })
-  // }
 
   // Função para atualizar dados do jogador
   const atualizarJogador = async () => {
@@ -209,78 +199,87 @@ function App() {
   // Função para salvar partida
   // DADOS VARIÁVEIS: Esta função enviará os dados para a API
   const salvarPartida = async () => {
-    // Validações
-    if (golsTime1 < 0 || golsTime2 < 0) {
-      alert('Os gols não podem ser negativos!')
-      return
-    }
     
-    if (jogadoresSelecionadosTime1.length > 8 || jogadoresSelecionadosTime2.length > 8) {
-      alert('Cada time pode ter no máximo 8 jogadores!')
-      return
-    }
-
-    // DADOS VARIÁVEIS: Determina o vencedor baseado nos gols
-    let vencedor: string
-    if (golsTime1 > golsTime2) {
-      vencedor = 'Azul'
-    } else if (golsTime1 < golsTime2) {
-      vencedor = 'Vermelho'
+    //Verifica admin
+    const userInput: string | null = window.prompt("Please enter password: ");
+    if(userInput !== "admin5678"){
+      alert("Esta ação requer permissões de administrador!")
+      console.log("Impossivel salvar partida!");
     } else {
-      vencedor = 'Empate'
-    }
 
-    // DADOS VARIÁVEIS: Cria lista de jogadores com seus IDs e times
-    const jogadoresComTimes = [
-      ...jogadoresSelecionadosTime1.map(id => ({
-        id: id,
-        time: 'Azul'
-      })),
-      ...jogadoresSelecionadosTime2.map(id => ({
-        id: id,
-        time: 'Vermelho'
-      }))
-    ]
-
-    const dadosPartida: PartidaSalva = {
-      id: null,     //Possivel problema ao Salvar partida
-      jogadores: jogadoresComTimes,
-      golsAzul: golsTime1,
-      golsVermelho: golsTime2,
-      vencedor,
-      data: new Date()
-    }
-  
-    try {
-      const res = await fetch(`${API_URL}/partidas`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dadosPartida),
-      })
-  
-      if (!res.ok) {
-        throw new Error('Erro ao salvar partida')
+    // Validações
+      if (golsTime1 < 0 || golsTime2 < 0) {
+        alert('Os gols não podem ser negativos!')
+        return
       }
-  
-      const partidaSalva = await res.json()
-      setPartidasSalvas([...partidasSalvas, partidaSalva])
-  
-      // limpar inputs (como você já faz)
-      setJogadoresSelecionadosTime1([])
-      setJogadoresSelecionadosTime2([])
-      setGolsTime1(0)
-      setGolsTime2(0)
-      setJogadorSelecionadoTime1(0)
-      setJogadorSelecionadoTime2(0)
-  
-    } catch (err) {
-      console.error(err)
-      alert('Falha ao salvar partida no servidor')
+      
+      if (jogadoresSelecionadosTime1.length > 8 || jogadoresSelecionadosTime2.length > 8) {
+        alert('Cada time pode ter no máximo 8 jogadores!')
+        return
+      }
+
+      // DADOS VARIÁVEIS: Determina o vencedor baseado nos gols
+      let vencedor: string
+      if (golsTime1 > golsTime2) {
+        vencedor = 'Azul'
+      } else if (golsTime1 < golsTime2) {
+        vencedor = 'Vermelho'
+      } else {
+        vencedor = 'Empate'
+      }
+
+      // DADOS VARIÁVEIS: Cria lista de jogadores com seus IDs e times
+      const jogadoresComTimes = [
+        ...jogadoresSelecionadosTime1.map(id => ({
+          id: id,
+          time: 'Azul'
+        })),
+        ...jogadoresSelecionadosTime2.map(id => ({
+          id: id,
+          time: 'Vermelho'
+        }))
+      ]
+
+      const dadosPartida: PartidaSalva = {
+        id: null,     //Possivel problema ao Salvar partida
+        jogadores: jogadoresComTimes,
+        golsAzul: golsTime1,
+        golsVermelho: golsTime2,
+        vencedor,
+        data: new Date()
+      }
+    
+      try {
+        const res = await fetch(`${API_URL}/partidas`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dadosPartida),
+        })
+    
+        if (!res.ok) {
+          throw new Error('Erro ao salvar partida')
+        }
+    
+        const partidaSalva = await res.json()
+        setPartidasSalvas([...partidasSalvas, partidaSalva])
+    
+        // limpar inputs (como você já faz)
+        setJogadoresSelecionadosTime1([])
+        setJogadoresSelecionadosTime2([])
+        setGolsTime1(0)
+        setGolsTime2(0)
+        setJogadorSelecionadoTime1(0)
+        setJogadorSelecionadoTime2(0)
+    
+      } catch (err) {
+        console.error(err)
+        alert('Falha ao salvar partida no servidor')
+      }
+      // DADOS VARIÁVEIS: Aqui os dados serão enviados para o backend/API
+      console.log('Dados da partida para enviar:', dadosPartida)
+      // TODO: Implementar chamada à API
+      // Exemplo: await fetch('/api/partidas', { method: 'POST', body: JSON.stringify(dadosPartida) })
     }
-    // DADOS VARIÁVEIS: Aqui os dados serão enviados para o backend/API
-    console.log('Dados da partida para enviar:', dadosPartida)
-    // TODO: Implementar chamada à API
-    // Exemplo: await fetch('/api/partidas', { method: 'POST', body: JSON.stringify(dadosPartida) })
   }
 
   return (
@@ -479,15 +478,16 @@ function App() {
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-white mb-6">Partidas Registradas</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {partidasSalvas.map((partida) => {
+              {
+              partidasSalvas.map((partida) => {
                 const jogadoresAzul = partida.jogadores.filter(j => j.time === 'Azul')
                 const jogadoresVermelho = partida.jogadores.filter(j => j.time === 'Vermelho')
                 const dataFormatada = new Date(partida.data).toLocaleString('pt-BR', {
                   day: '2-digit',
                   month: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
+                  year: 'numeric'
+                  // hour: '2-digit',
+                  // minute: '2-digit'
                 })
 
                 return (
