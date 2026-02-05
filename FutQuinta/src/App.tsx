@@ -89,16 +89,21 @@ function App() {
 
   // Função para iniciar edição de um jogador
   const iniciarEdicao = (jogador: Jogador) => {
-    setJogadorEditando(jogador)
-    setFormData({
-      nome: jogador.nome,
-      pontos: jogador.pontos,
-      partidas: jogador.partidas,
-      vitorias: jogador.vitorias,
-      empates: jogador.empates,
-      derrotas: jogador.derrotas,
-    })
+    alert("Esta ação requer permissões de administrador!")
+    console.log("Impossivel alterar os dados de"+jogador.nome);
   }
+
+  // const iniciarEdicao = (jogador: Jogador) => {
+  //   setJogadorEditando(jogador)
+  //   setFormData({
+  //     nome: jogador.nome,
+  //     pontos: jogador.pontos,
+  //     partidas: jogador.partidas,
+  //     vitorias: jogador.vitorias,
+  //     empates: jogador.empates,
+  //     derrotas: jogador.derrotas,
+  //   })
+  // }
 
   // Função para atualizar dados do jogador
   const atualizarJogador = async () => {
