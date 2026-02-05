@@ -1,13 +1,31 @@
 name: Deploy Staging
 
-# Aqui definimos o gatilho
 on:
-  push:
-    branches:
-      - staging
+  push:
+    branches:
+      - staging
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-steps:
-   - name: git clone https://github.com/Cauan-Monteiro/app-futdequinta.git
-     uses: actions/checkout@v4
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Executar Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Entra na pasta do projeto na VPS (AJUSTE ESTA LINHA!)
+            cd app-futquinta/app-futdequinta
+            
+            # Baixa as novidades da branch staging
+            git fetch origin
+            git checkout staging
+            git pull origin staging
+            
+            # Recria os containers
+            docker compose down
+            docker compose up -d --build
