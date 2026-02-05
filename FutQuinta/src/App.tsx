@@ -63,6 +63,8 @@ function App() {
     derrotas: 0,
   })
 
+  console.log(PASS)
+
   // DADOS VARIÁVEIS: Estados para os dois times
   // Estes dados serão usados para registrar uma partida com jogadores selecionados
   // Arrays de IDs dos jogadores selecionados para cada time (armazenados temporariamente)
