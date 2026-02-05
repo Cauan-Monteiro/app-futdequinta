@@ -90,7 +90,7 @@ function App() {
   //Ordena as partidas por data
   partidasSalvas.sort((a, b) => {const dataA = new Date(a.data).getTime();
     const dataB = new Date(b.data).getTime();
-    return dataA - dataB;
+    return dataB - dataA;
     });
 
   // Função para iniciar edição de um jogador
