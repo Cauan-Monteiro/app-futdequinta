@@ -3,7 +3,7 @@ import './App.css'
 import logo from './assets/futebol de quinta_nova_bg.png'
 
 const API_URL = import.meta.env.VITE_API_URL
-const PASS = import.meta.env.ADMIN_PASSWORD
+const PASS = import.meta.env.VITE_ADMIN_PASSWORD
 
 // Interface para definir a estrutura dos dados de um jogador
 interface Jogador {
@@ -63,7 +63,7 @@ function App() {
     derrotas: 0,
   })
 
-  console.log(PASS)
+  console.log(API_URL)
 
   // DADOS VARIÁVEIS: Estados para os dois times
   // Estes dados serão usados para registrar uma partida com jogadores selecionados
