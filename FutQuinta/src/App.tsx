@@ -498,7 +498,7 @@ function App() {
                 })
 
                 return (
-                  <div key={partida.id} className="bg-gray-800 rounded-lg shadow-lg p-6 min-w-full md:w-1/3 box-border shrink-0 scrollbar-hide snap-center">
+                  <div key={partida.id} className="bg-gray-800 rounded-lg shadow-lg p-6 min-w-full md:w-1/4 box-border shrink-0 scrollbar-hide snap-center">
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-xs text-gray-400">{dataFormatada}</span>
