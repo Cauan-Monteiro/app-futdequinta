@@ -93,6 +93,8 @@ function App() {
     const dataB = new Date(b.data).getTime();
     return dataB - dataA;
     });
+  //Ordena jogadores por pontos
+  jogadores.sort((a, b) => b.pontos - a.pontos);
 
   // Função para iniciar edição de um jogador
   const iniciarEdicao = (jogador: Jogador) => {
