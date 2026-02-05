@@ -1,0 +1,13 @@
+name: Deploy Staging
+
+# Aqui definimos o gatilho
+on:
+  push:
+    branches:
+      - staging
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+steps:
+   - name: git clone https://github.com/Cauan-Monteiro/app-futdequinta.git
+     uses: actions/checkout@v4
