@@ -355,7 +355,7 @@ function App() {
             <div className="flex flex-col items-center space-y-2">
               {/* DADOS VARIÁVEIS: Logo acima do nome */}
               <img src={logo} alt="FutQuinta Logo" className="h-80 w-full object-cover" />
-              <h1 className="text-4xl font-bold text-white">⚽BID FutDeQuinta🍻</h1>
+              <h1 className="text-4xl font-thin text-white ">⚽ BID FutDeQuinta 🍻</h1>
             </div>
           </div>
         </div>
@@ -381,7 +381,7 @@ function App() {
                   <button
                     onClick={() => setTimeEditandoModal('Azul')}
                     disabled={jogadoresSelecionadosTime1.length >= 8}
-                    className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white font-semibold rounded-md transition-colors"
+                    className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white font-semibold rounded-md transition-colors cursor-pointer"
                   >
                     Selecionar Jogadores
                   </button>
@@ -444,7 +444,7 @@ function App() {
                   <button
                     onClick={() => setTimeEditandoModal('Vermelho')}
                     disabled={jogadoresSelecionadosTime2.length >= 8}
-                    className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white font-semibold rounded-md transition-colors"
+                    className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white font-semibold rounded-md transition-colors cursor-pointer"
                   >
                     Selecionar Jogadores
                   </button>
@@ -500,7 +500,7 @@ function App() {
             <button
               onClick={salvarPartida}
               disabled={carregando}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors cursor-pointer"
             >
               {carregando ? (
                 <>
