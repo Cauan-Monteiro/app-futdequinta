@@ -21,20 +21,23 @@ function App() {
   // Este array será atualizado através de API, banco de dados ou inputs do usuário
   const [jogadores, setJogadores] = useState<Jogador[]>([])
 
-  useEffect(() => {
-    async function carregarJogadores() {
-      try {
-        const res = await fetch(`${API_URL}/jogadores`)
-        if (!res.ok) throw new Error('Erro ao buscar jogadores')
-        const data: Jogador[] = await res.json()
-        setJogadores(data)
-      } catch (err) {
-        console.error(err)
-      }
+  async function carregarJogadores() {
+    try {
+      const res = await fetch(`${API_URL}/jogadores`);
+      if (!res.ok) throw new Error('Erro ao buscar jogadores');
+      const data: Jogador[] = await res.json();
+      setJogadores(data);
+    } catch (err) {
+      console.error(err);
     }
-  
-    carregarJogadores()
-  }, [])
+  }
+
+  // O useEffect apenas "dá o play" quando a página abre
+  useEffect(() => {
+    carregarJogadores();
+  }, []);
+
+  const [carregando, setCarregando] = useState(false);
 
   useEffect(() => {
     async function carregarPartidas() {
@@ -205,91 +208,121 @@ function App() {
     )
   }
 
+  async function atualizarEstatisticasJogador(id: number, resultado: 'vitoria' | 'empate' | 'derrota') {
+    const jogadorAtual = jogadores.find(j => j.id === id);
+    if (!jogadorAtual) return;
+  
+    // Criamos o objeto com os novos valores
+    const dadosAtualizados = {
+      ...jogadorAtual,
+      partidas: jogadorAtual.partidas + 1,
+      pontos: jogadorAtual.pontos + (resultado === 'vitoria' ? 3 : (resultado === 'empate' ? 1 : 0)),
+      vitorias: jogadorAtual.vitorias + (resultado === 'vitoria' ? 1 : 0),
+      empates: jogadorAtual.empates + (resultado === 'empate' ? 1 : 0),
+      derrotas: jogadorAtual.derrotas + (resultado === 'derrota' ? 1 : 0),
+    };
+  
+    return fetch(`${API_URL}/jogadores/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dadosAtualizados),
+    });
+  }
+
   // Função para salvar partida
   // DADOS VARIÁVEIS: Esta função enviará os dados para a API
   const salvarPartida = async () => {
-    
-    //Verifica admin
+    // Início: Bloqueio de segurança e feedback visual
     const userInput: string | null = window.prompt("Please enter password: ");
-    if(userInput !== PASS){
-      alert("Esta ação requer permissões de administrador!")
-      console.log("Impossivel salvar partida!");
-    } else {
-
-    // Validações
+    if (userInput !== PASS) {
+      alert("Esta ação requer permissões de administrador!");
+      return;
+    }
+  
+    setCarregando(true); // Ativa o loading
+  
+    try {
+      // Validações iniciais
       if (golsTime1 < 0 || golsTime2 < 0) {
-        alert('Os gols não podem ser negativos!')
-        return
+        alert('Os gols não podem ser negativos!');
+        return;
       }
-      
+  
       if (jogadoresSelecionadosTime1.length > 8 || jogadoresSelecionadosTime2.length > 8) {
-        alert('Cada time pode ter no máximo 8 jogadores!')
-        return
+        alert('Cada time pode ter no máximo 8 jogadores!');
+        return;
       }
-
-      // DADOS VARIÁVEIS: Determina o vencedor baseado nos gols
-      let vencedor: string
+  
+      // Lógica do Vencedor
+      let vencedor: string;
       if (golsTime1 > golsTime2) {
-        vencedor = 'Azul'
+        vencedor = 'Azul';
       } else if (golsTime1 < golsTime2) {
-        vencedor = 'Vermelho'
+        vencedor = 'Vermelho';
       } else {
-        vencedor = 'Empate'
+        vencedor = 'Empate';
       }
-
-      // DADOS VARIÁVEIS: Cria lista de jogadores com seus IDs e times
+  
+      // Preparação dos dados para o Histórico 
       const jogadoresComTimes = [
-        ...jogadoresSelecionadosTime1.map(id => ({
-          id: id,
-          time: 'Azul'
-        })),
-        ...jogadoresSelecionadosTime2.map(id => ({
-          id: id,
-          time: 'Vermelho'
-        }))
-      ]
-
+        ...jogadoresSelecionadosTime1.map(id => ({ id, time: 'Azul' })),
+        ...jogadoresSelecionadosTime2.map(id => ({ id, time: 'Vermelho' }))
+      ];
+  
       const dadosPartida: PartidaSalva = {
-        id: null,     //Possivel problema ao Salvar partida
+        id: null,
         jogadores: jogadoresComTimes,
         golsAzul: golsTime1,
         golsVermelho: golsTime2,
         vencedor,
         data: new Date()
-      }
-    
-      try {
-        const res = await fetch(`${API_URL}/partidas`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dadosPartida),
-        })
-    
-        if (!res.ok) {
-          throw new Error('Erro ao salvar partida')
-        }
-    
-        const partidaSalva = await res.json()
-        setPartidasSalvas([...partidasSalvas, partidaSalva])
-    
-        // limpar inputs (como você já faz)
-        setJogadoresSelecionadosTime1([])
-        setJogadoresSelecionadosTime2([])
-        setGolsTime1(0)
-        setGolsTime2(0)
-        setJogadorSelecionadoTime1(0)
-        setJogadorSelecionadoTime2(0)
-    
-      } catch (err) {
-        console.error(err)
-        alert('Falha ao salvar partida no servidor')
-      }
-      // DADOS VARIÁVEIS: Aqui os dados serão enviados para o backend/API
-      console.log('Dados da partida para enviar:', dadosPartida)
-      // TODO: Implementar chamada à API
-      // Exemplo: await fetch('/api/partidas', { method: 'POST', body: JSON.stringify(dadosPartida) })
+      };
+  
+      // Salvar a Partida na API
+      const res = await fetch(`${API_URL}/partidas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dadosPartida),
+      });
+  
+      if (!res.ok) throw new Error('Erro ao salvar partida');
+  
+      const partidaSalva = await res.json();
+      setPartidasSalvas([...partidasSalvas, partidaSalva]);
+  
+      // Atualizar Estatísticas dos Jogadores (Assíncrono)
+      const promessasAzul = jogadoresSelecionadosTime1.map(id => {
+        const resultado = vencedor === 'Azul' ? 'vitoria' : (vencedor === 'Empate' ? 'empate' : 'derrota');
+        return atualizarEstatisticasJogador(id, resultado);
+      });
+  
+      const promessasVermelho = jogadoresSelecionadosTime2.map(id => {
+        const resultado = vencedor === 'Vermelho' ? 'vitoria' : (vencedor === 'Empate' ? 'empate' : 'derrota');
+        return atualizarEstatisticasJogador(id, resultado);
+      });
+  
+      // Espera todas as atualizações terminarem
+      await Promise.all([...promessasAzul, ...promessasVermelho]);
+  
+      // Sincronizar dados e limpar a interface 
+      await carregarJogadores(); // Recarrega a lista do servidor
+  
+      setJogadoresSelecionadosTime1([]);
+      setJogadoresSelecionadosTime2([]);
+      setGolsTime1(0);
+      setGolsTime2(0);
+      setJogadorSelecionadoTime1(0);
+      setJogadorSelecionadoTime2(0);
+  
+      alert('Partida e estatísticas salvas com sucesso!');
+  
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao processar partida!');
+    } finally {
+      setCarregando(false); // Desliga o loading independente do que aconteça
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -473,9 +506,17 @@ function App() {
           <div className="flex justify-center">
             <button
               onClick={salvarPartida}
+              disabled={carregando}
               className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors"
             >
-              Salvar Partida
+              {carregando ? (
+                <>
+                  <span className="spinner"></span>
+                  Salvando...
+                </>
+              ) : (
+                'Salvar Partida'
+              )}
             </button>
           </div>
         </div>
