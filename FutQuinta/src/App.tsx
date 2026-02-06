@@ -435,44 +435,44 @@ function App() {
               
               {/* DADOS VARIÁVEIS: Input para adicionar jogadores da lista existente */}
               <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Escalação do Time
-                  </label>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setTimeEditandoModal('Vermelho')}
-                      disabled={jogadoresSelecionadosTime2.length >= 8}
-                      className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white font-semibold rounded-md transition-colors"
-                    >
-                      Selecionar Jogadores
-                    </button>
-                  </div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Escalação do Time
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setTimeEditandoModal('Vermelho')}
+                    disabled={jogadoresSelecionadosTime2.length >= 8}
+                    className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white font-semibold rounded-md transition-colors"
+                  >
+                    Selecionar Jogadores
+                  </button>
                 </div>
-              </div>
+              
 
-              {/* DADOS VARIÁVEIS: Cards dos jogadores selecionados (armazenados temporariamente) */}
-              {jogadoresSelecionadosTime2.length >= 8 && (
-                <p className="text-yellow-400 text-xs mb-2">Máximo de 8 jogadores atingido</p>
-              )}
-              <div className="mb-4 space-y-2">
-                {jogadoresSelecionadosTime2.map((jogadorId) => {
-                  const jogador = jogadores.find(j => j.id === jogadorId)
-                  if (!jogador) return null
-                  return (
-                    <div key={jogadorId} className="bg-gray-700 rounded-md p-3 flex items-center justify-between">
-                      <span className="text-white font-medium">{jogador.nome}</span>
-                      <button
-                        onClick={() => removerJogadorTime2(jogadorId)}
-                        className="text-red-400 hover:text-red-300 transition-colors"
-                        title="Remover jogador"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  )
-                })}
+                {/* DADOS VARIÁVEIS: Cards dos jogadores selecionados (armazenados temporariamente) */}
+                {jogadoresSelecionadosTime2.length >= 8 && (
+                  <p className="text-yellow-400 text-xs mb-2">Máximo de 8 jogadores atingido</p>
+                )}
+                <div className="mb-4 space-y-2">
+                  {jogadoresSelecionadosTime2.map((jogadorId) => {
+                    const jogador = jogadores.find(j => j.id === jogadorId)
+                    if (!jogador) return null
+                    return (
+                      <div key={jogadorId} className="bg-gray-700 rounded-md p-3 flex items-center justify-between">
+                        <span className="text-white font-medium">{jogador.nome}</span>
+                        <button
+                          onClick={() => removerJogadorTime2(jogadorId)}
+                          className="text-red-400 hover:text-red-300 transition-colors"
+                          title="Remover jogador"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
 
               {/* DADOS VARIÁVEIS: Input de número de gols do Time 2 */}
@@ -511,6 +511,7 @@ function App() {
               )}
             </button>
           </div>
+        </div>
       </div>
 
       {/* SEÇÃO DE PARTIDAS SALVAS */}
