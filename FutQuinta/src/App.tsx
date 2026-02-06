@@ -418,7 +418,6 @@ function App() {
                     setGolsTime1(valor < 0 ? 0 : valor)
                   }}
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="0"
                 />
               </div>
             </div>
@@ -495,7 +494,6 @@ function App() {
                     setGolsTime2(valor < 0 ? 0 : valor)
                   }}
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="0"
                 />
               </div>
             </div>
