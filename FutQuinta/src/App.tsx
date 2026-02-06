@@ -215,19 +215,19 @@ function App() {
 
   // Função para obter jogadores disponíveis (não selecionados) para cada time
   // DADOS VARIÁVEIS: Garante que um jogador não pode estar em ambos os times
-  const getJogadoresDisponiveisTime1 = () => {
-    return jogadores.filter(j => 
-      !jogadoresSelecionadosTime1.includes(j.id) && 
-      !jogadoresSelecionadosTime2.includes(j.id)
-    )
-  }
+  // const getJogadoresDisponiveisTime1 = () => {
+  //   return jogadores.filter(j => 
+  //     !jogadoresSelecionadosTime1.includes(j.id) && 
+  //     !jogadoresSelecionadosTime2.includes(j.id)
+  //   )
+  // }
 
-  const getJogadoresDisponiveisTime2 = () => {
-    return jogadores.filter(j =>
-      !jogadoresSelecionadosTime2.includes(j.id) &&
-      !jogadoresSelecionadosTime1.includes(j.id)
-    )
-  }
+  // const getJogadoresDisponiveisTime2 = () => {
+  //   return jogadores.filter(j =>
+  //     !jogadoresSelecionadosTime2.includes(j.id) &&
+  //     !jogadoresSelecionadosTime1.includes(j.id)
+  //   )
+  // }
 
   async function atualizarEstatisticasJogador(id: number, resultado: 'vitoria' | 'empate' | 'derrota') {
     const jogadorAtual = jogadores.find(j => j.id === id);
@@ -511,325 +511,329 @@ function App() {
               )}
             </button>
           </div>
-        </div>
+      </div>
 
-        {/* SEÇÃO DE PARTIDAS SALVAS */}
-        {partidasSalvas.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-white mb-6">Partidas Registradas</h2>
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 scrollbar-hide">
-              {
-              partidasSalvas.map((partida) => {
-                const jogadoresAzul = partida.jogadores.filter(j => j.time === 'Azul')
-                const jogadoresVermelho = partida.jogadores.filter(j => j.time === 'Vermelho')
-                const dataFormatada = new Date(partida.data).toLocaleString('pt-BR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                  // hour: '2-digit',
-                  // minute: '2-digit'
-                })
+      {/* SEÇÃO DE PARTIDAS SALVAS */}
+      {partidasSalvas.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-white mb-6">Partidas Registradas</h2>
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 scrollbar-hide">
+            {
+            partidasSalvas.map((partida) => {
+              const jogadoresAzul = partida.jogadores.filter(j => j.time === 'Azul')
+              const jogadoresVermelho = partida.jogadores.filter(j => j.time === 'Vermelho')
+              const dataFormatada = new Date(partida.data).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+                // hour: '2-digit',
+                // minute: '2-digit'
+              })
 
-                return (
-                  <div key={partida.id} className="bg-gray-800 rounded-lg shadow-lg p-6 min-w-full md:w-1/4 box-border scrollbar-hide snap-center">
-                    <div className="mb-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs text-gray-400">{dataFormatada}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          partida.vencedor === 'Azul' ? 'bg-blue-500 text-white' :
-                          partida.vencedor === 'Vermelho' ? 'bg-red-500 text-white' :
-                          'bg-gray-500 text-white'
-                        }`}>
-                          {partida.vencedor}
-                        </span>
+              return (
+                <div key={partida.id} className="bg-gray-800 rounded-lg shadow-lg p-6 min-w-full md:w-1/4 box-border scrollbar-hide snap-center">
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs text-gray-400">{dataFormatada}</span>
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        partida.vencedor === 'Azul' ? 'bg-blue-500 text-white' :
+                        partida.vencedor === 'Vermelho' ? 'bg-red-500 text-white' :
+                        'bg-gray-500 text-white'
+                      }`}>
+                        {partida.vencedor}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center mb-4">
+                      <div className="text-center">
+                        <p className="text-blue-400 font-bold text-lg">{partida.golsAzul}</p>
+                        <p className="text-xs text-gray-400">Time Azul</p>
                       </div>
-                      <div className="flex justify-between items-center mb-4">
-                        <div className="text-center">
-                          <p className="text-blue-400 font-bold text-lg">{partida.golsAzul}</p>
-                          <p className="text-xs text-gray-400">Time Azul</p>
-                        </div>
-                        <span className="text-gray-500 text-xl">×</span>
-                        <div className="text-center">
-                          <p className="text-red-400 font-bold text-lg">{partida.golsVermelho}</p>
-                          <p className="text-xs text-gray-400">Time Vermelho</p>
-                        </div>
+                      <span className="text-gray-500 text-xl">×</span>
+                      <div className="text-center">
+                        <p className="text-red-400 font-bold text-lg">{partida.golsVermelho}</p>
+                        <p className="text-xs text-gray-400">Time Vermelho</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-semibold text-blue-400 mb-2">Time Azul ({jogadoresAzul.length} jogadores):</p>
+                      <div className="flex flex-wrap gap-1">
+                        {jogadoresAzul.map((j) => {
+                          const jogador = jogadores.find(jog => jog.id === j.id)
+                          return (
+                            <span key={j.id} className="text-xs bg-blue-900 text-blue-200 px-2 py-1 rounded">
+                              {jogador?.nome || `ID: ${j.id}`}
+                            </span>
+                          )
+                        })}
                       </div>
                     </div>
                     
-                    <div className="space-y-3">
-                      <div>
-                        <p className="text-sm font-semibold text-blue-400 mb-2">Time Azul ({jogadoresAzul.length} jogadores):</p>
-                        <div className="flex flex-wrap gap-1">
-                          {jogadoresAzul.map((j) => {
-                            const jogador = jogadores.find(jog => jog.id === j.id)
-                            return (
-                              <span key={j.id} className="text-xs bg-blue-900 text-blue-200 px-2 py-1 rounded">
-                                {jogador?.nome || `ID: ${j.id}`}
-                              </span>
-                            )
-                          })}
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-semibold text-red-400 mb-2">Time Vermelho ({jogadoresVermelho.length} jogadores):</p>
-                        <div className="flex flex-wrap gap-1">
-                          {jogadoresVermelho.map((j) => {
-                            const jogador = jogadores.find(jog => jog.id === j.id)
-                            return (
-                              <span key={j.id} className="text-xs bg-red-900 text-red-200 px-2 py-1 rounded">
-                                {jogador?.nome || `ID: ${j.id}`}
-                              </span>
-                            )
-                          })}
-                        </div>
+                    <div>
+                      <p className="text-sm font-semibold text-red-400 mb-2">Time Vermelho ({jogadoresVermelho.length} jogadores):</p>
+                      <div className="flex flex-wrap gap-1">
+                        {jogadoresVermelho.map((j) => {
+                          const jogador = jogadores.find(jog => jog.id === j.id)
+                          return (
+                            <span key={j.id} className="text-xs bg-red-900 text-red-200 px-2 py-1 rounded">
+                              {jogador?.nome || `ID: ${j.id}`}
+                            </span>
+                          )
+                        })}
                       </div>
                     </div>
                   </div>
-                )
-              })}
-            </div>
-          </div>
-        )}
-
-        <h2 className="text-3xl font-bold text-white mb-6">Estatísticas dos Jogadores</h2>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* TABELA DE ESTATÍSTICAS */}
-          <div className="lg:col-span-2">
-            <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-700">
-                  <thead className="bg-gray-700">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Jogador
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Pontos
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Partidas
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Vitórias
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Empates
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Derrotas
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        Ações
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-gray-800 divide-y divide-gray-700">
-                    {/* DADOS VARIÁVEIS: Cada linha desta tabela representa um jogador */}
-                    {/* Os dados (nome, gols, assistências, etc.) virão de uma fonte de dados dinâmica */}
-                    {jogadores.map((jogador) => (
-                      <tr key={jogador.id} className="hover:bg-gray-700">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
-                          {jogador.nome}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                          {jogador.pontos}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                          {jogador.partidas}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-green-400">
-                          {jogador.vitorias}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-300">
-                          {jogador.empates}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-red-400">
-                          {jogador.derrotas}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <button
-                            onClick={() => iniciarEdicao(jogador)}
-                            className="text-green-400 hover:text-green-300 font-medium"
-                          >
-                            <a href="#divEdicao">Editar</a>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          {/* ÁREA DE INPUT PARA ATUALIZAR DADOS */}
-          <div className="lg:col-span-1">
-            <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-bold text-white mb-4">
-                {jogadorEditando ? 'Atualizar Dados' : 'Selecione um Jogador'}
-              </h3>
-
-              {/* DADOS VARIÁVEIS: Este formulário será usado para atualizar os dados do jogador selecionado */}
-              {/* Os valores serão enviados para o backend/API quando o usuário clicar em "Atualizar" */}
-              {jogadorEditando ? (
-                <div id="divEdicao" className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Nome do Jogador
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.nome}
-                      onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="Nome do jogador"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Pontos
-                    </label>
-                    <input
-                      type="number"
-                      value={formData.pontos}
-                      onChange={(e) => setFormData({ ...formData, pontos: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Partidas
-                    </label>
-                    <input
-                      type="number"
-                      value={formData.partidas}
-                      onChange={(e) => setFormData({ ...formData, partidas: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Vitórias
-                    </label>
-                    <input
-                      type="number"
-                      value={formData.vitorias}
-                      onChange={(e) => setFormData({ ...formData, vitorias: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Empates
-                    </label>
-                    <input
-                      type="number"
-                      value={formData.empates}
-                      onChange={(e) => setFormData({ ...formData, empates: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Derrotas
-                    </label>
-                    <input
-                      type="number"
-                      value={formData.derrotas}
-                      onChange={(e) => setFormData({ ...formData, derrotas: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div className="flex space-x-3 pt-4">
-                    <button
-                      onClick={atualizarJogador}
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition-colors"
-                    >
-                      Atualizar
-                    </button>
-                    <button
-                      onClick={cancelarEdicao}
-                      className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
                 </div>
-              ) : (
-                <p className="text-gray-400 text-sm">
-                  Clique em "Editar" na tabela ao lado para atualizar os dados de um jogador.
-                </p>
-              )}
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      <h2 className="text-3xl font-bold text-white mb-6">Estatísticas dos Jogadores</h2>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* TABELA DE ESTATÍSTICAS */}
+        <div className="lg:col-span-2">
+          <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-700">
+                <thead className="bg-gray-700">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Jogador
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Pontos
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Partidas
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Vitórias
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Empates
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Derrotas
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      Ações
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-gray-800 divide-y divide-gray-700">
+                  {/* DADOS VARIÁVEIS: Cada linha desta tabela representa um jogador */}
+                  {/* Os dados (nome, gols, assistências, etc.) virão de uma fonte de dados dinâmica */}
+                  {jogadores.map((jogador) => (
+                    <tr key={jogador.id} className="hover:bg-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
+                        {jogador.nome}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                        {jogador.pontos}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                        {jogador.partidas}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-400">
+                        {jogador.vitorias}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-300">
+                        {jogador.empates}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-red-400">
+                        {jogador.derrotas}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <button
+                          onClick={() => iniciarEdicao(jogador)}
+                          className="text-green-400 hover:text-green-300 font-medium"
+                        >
+                          <a href="#divEdicao">Editar</a>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
-        {timeEditandoModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col border border-gray-700">
-            
-            {/* 🏷️ Cabeçalho do Modal */}
-            <h2 className="text-xl font-bold text-white">
-              Selecionar Jogadores - Time {timeEditandoModal}
-            </h2>
-            <p className="text-sm text-gray-400 mb-4">
-              Selecionados: {timeEditandoModal === 'Azul' ? jogadoresSelecionadosTime1.length : jogadoresSelecionadosTime2.length} / 8
-            </p>
 
-            {/*Lista com Scroll */}
-            <div className="flex-1 overflow-y-auto space-y-2 pr-2">
-              {jogadores.map((jogador) => {
-                // Lógica para saber se o jogador está no time oposto (bloqueado)
-                const estaNoOutroTime = timeEditandoModal === 'Azul' 
-                  ? jogadoresSelecionadosTime2.includes(jogador.id) 
-                  : jogadoresSelecionadosTime1.includes(jogador.id);
-                
-                // Lógica para saber se está marcado no time atual
-                const estaNoTimeAtual = timeEditandoModal === 'Azul' 
-                  ? jogadoresSelecionadosTime1.includes(jogador.id) 
-                  : jogadoresSelecionadosTime2.includes(jogador.id);
+        {/* ÁREA DE INPUT PARA ATUALIZAR DADOS */}
+        <div className="lg:col-span-1">
+          <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 className="text-xl font-bold text-white mb-4">
+              {jogadorEditando ? 'Atualizar Dados' : 'Selecione um Jogador'}
+            </h3>
 
-                return (
-                  <div 
-                    key={jogador.id} 
-                    className={`flex items-center justify-between p-3 rounded-md transition-colors ${estaNoOutroTime ? 'bg-gray-900' : 'bg-gray-700 hover:bg-gray-600'}`}
+            {/* DADOS VARIÁVEIS: Este formulário será usado para atualizar os dados do jogador selecionado */}
+            {/* Os valores serão enviados para o backend/API quando o usuário clicar em "Atualizar" */}
+            {jogadorEditando ? (
+              <div id="divEdicao" className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Nome do Jogador
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.nome}
+                    onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Nome do jogador"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Pontos
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.pontos}
+                    onChange={(e) => setFormData({ ...formData, pontos: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="0"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Partidas
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.partidas}
+                    onChange={(e) => setFormData({ ...formData, partidas: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="0"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Vitórias
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.vitorias}
+                    onChange={(e) => setFormData({ ...formData, vitorias: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="0"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Empates
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.empates}
+                    onChange={(e) => setFormData({ ...formData, empates: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="0"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Derrotas
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.derrotas}
+                    onChange={(e) => setFormData({ ...formData, derrotas: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="0"
+                  />
+                </div>
+
+                <div className="flex space-x-3 pt-4">
+                  <button
+                    onClick={atualizarJogador}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition-colors"
                   >
-                    <span className={`font-medium ${estaNoOutroTime ? 'text-gray-600' : 'text-white'}`}>
-                      {jogador.nome}
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={estaNoTimeAtual}
-                      disabled={estaNoOutroTime}
-                      onChange={() => toggleJogador(jogador.id)}
-                      className={`w-5 h-5 cursor-pointer ${timeEditandoModal === 'Azul' ? 'accent-blue-500' : 'accent-red-500'}`}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Botão Final */}
-            <button 
-              onClick={() => setTimeEditandoModal(null)}
-              className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded transition-colors"
-            >
-              Concluir Seleção
-            </button>
+                    Atualizar
+                  </button>
+                  <button
+                    onClick={cancelarEdicao}
+                    className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm">
+                Clique em "Editar" na tabela ao lado para atualizar os dados de um jogador.
+              </p>
+            )}
           </div>
         </div>
+      </div>
+      {timeEditandoModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col border border-gray-700">
+          
+          {/* 🏷️ Cabeçalho do Modal */}
+          <h2 className="text-xl font-bold text-white">
+            Selecionar Jogadores - Time {timeEditandoModal}
+          </h2>
+          <p className="text-sm text-gray-400 mb-4">
+            Selecionados: {timeEditandoModal === 'Azul' ? jogadoresSelecionadosTime1.length : jogadoresSelecionadosTime2.length} / 8
+          </p>
+
+          {/*Lista com Scroll */}
+          <div className="flex-1 overflow-y-auto space-y-2 pr-2">
+            {jogadores.map((jogador) => {
+              // Lógica para saber se o jogador está no time oposto (bloqueado)
+              const estaNoOutroTime = timeEditandoModal === 'Azul' 
+                ? jogadoresSelecionadosTime2.includes(jogador.id) 
+                : jogadoresSelecionadosTime1.includes(jogador.id);
+              
+              // Lógica para saber se está marcado no time atual
+              const estaNoTimeAtual = timeEditandoModal === 'Azul' 
+                ? jogadoresSelecionadosTime1.includes(jogador.id) 
+                : jogadoresSelecionadosTime2.includes(jogador.id);
+
+              return (
+                <div 
+                  key={jogador.id} 
+                  className={`flex items-center justify-between p-3 rounded-md transition-colors ${estaNoOutroTime ? 'bg-gray-900' : 'bg-gray-700 hover:bg-gray-600'}`}
+                >
+                  <span className={`font-medium ${estaNoOutroTime ? 'text-gray-600' : 'text-white'}`}>
+                    {jogador.nome}
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={estaNoTimeAtual}
+                    disabled={estaNoOutroTime}
+                    onChange={() => toggleJogador(jogador.id)}
+                    className={`w-5 h-5 cursor-pointer ${timeEditandoModal === 'Azul' ? 'accent-blue-500' : 'accent-red-500'}`}
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Botão Final */}
+          <button 
+            onClick={() => setTimeEditandoModal(null)}
+            className={`w-full mt-6 text-white font-bold py-2 rounded transition-colors ${
+              timeEditandoModal === 'Azul' 
+                ? 'bg-blue-600 hover:bg-blue-700' 
+                : 'bg-red-600 hover:bg-red-700'
+            }`}
+          >
+            Concluir Seleção
+          </button>
+        </div>
+      </div>
       )}
     </div>
   )
