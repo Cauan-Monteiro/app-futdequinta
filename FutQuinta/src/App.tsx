@@ -300,7 +300,7 @@ function App() {
             <div className="flex flex-col items-center space-y-2">
               {/* DADOS VARIÁVEIS: Logo acima do nome */}
               <img src={logo} alt="FutQuinta Logo" className="h-60 w-full object-cover" />
-              <h1 className="text-xl font-bold text-white">⚽BID FutDeQuinta🍻</h1>
+              <h1 className="text-4xl font-bold text-white">⚽BID FutDeQuinta🍻</h1>
             </div>
           </div>
         </div>
@@ -379,7 +379,6 @@ function App() {
                 </label>
                 <input
                   type="number"
-                  min="0"
                   value={golsTime1}
                   onChange={(e) => {
                     const valor = parseInt(e.target.value) || 0
@@ -457,7 +456,6 @@ function App() {
                 </label>
                 <input
                   type="number"
-                  min="0"
                   value={golsTime2}
                   onChange={(e) => {
                     const valor = parseInt(e.target.value) || 0
