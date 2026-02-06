@@ -779,7 +779,14 @@ function App() {
         </div>
       </div>
       {timeEditandoModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        onClick={(e) => {
+          //Só fecha se o clique for na div do fundo, não nos seus filhos
+          if (e.target === e.currentTarget) {
+            setTimeEditandoModal(null);
+          }
+        }}
+        >
           <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col border border-gray-700">
 
             {/* 🏷️ Cabeçalho do Modal */}
@@ -831,7 +838,7 @@ function App() {
                   : 'bg-red-600 hover:bg-red-700'
                 }`}
             >
-              Concluir Seleção
+              Recolher Seleção
             </button>
           </div>
         </div>
