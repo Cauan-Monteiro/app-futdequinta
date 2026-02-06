@@ -299,7 +299,7 @@ function App() {
           <div className="flex justify-center items-center">
             <div className="flex flex-col items-center space-y-2">
               {/* DADOS VARIÁVEIS: Logo acima do nome */}
-              <img src={logo} alt="FutQuinta Logo" className="h-60 w-full object-cover" />
+              <img src={logo} alt="FutQuinta Logo" className="h-80 w-full object-cover" />
               <h1 className="text-4xl font-bold text-white">⚽BID FutDeQuinta🍻</h1>
             </div>
           </div>
@@ -620,7 +620,7 @@ function App() {
                             onClick={() => iniciarEdicao(jogador)}
                             className="text-green-400 hover:text-green-300 font-medium"
                           >
-                            Editar
+                            <a href="#divEdicao">Editar</a>
                           </button>
                         </td>
                       </tr>
@@ -641,7 +641,7 @@ function App() {
               {/* DADOS VARIÁVEIS: Este formulário será usado para atualizar os dados do jogador selecionado */}
               {/* Os valores serão enviados para o backend/API quando o usuário clicar em "Atualizar" */}
               {jogadorEditando ? (
-                <div className="space-y-4">
+                <div id="divEdicao" className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       Nome do Jogador
