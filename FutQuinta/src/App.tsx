@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import logo from './assets/futebol de quinta_nova_bg.png'
+import logo from './assets/newLogo.png'
 
 const API_URL = import.meta.env.VITE_API_URL
 const PASS = import.meta.env.VITE_ADMIN_PASSWORD
@@ -67,8 +67,6 @@ function App() {
     empates: 0,
     derrotas: 0,
   })
-
-  console.log(API_URL)
 
   // DADOS VARIÁVEIS: Estados para os dois times
   // Estes dados serão usados para registrar uma partida com jogadores selecionados
@@ -346,6 +344,11 @@ function App() {
     }
   };
 
+  
+  const reloadPage = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen bg-gray-900">
       {/* NAVBAR: DADOS VARIÁVEIS - Espaço para ícone e nome centralizado */}
@@ -354,7 +357,7 @@ function App() {
           <div className="flex justify-center items-center">
             <div className="flex flex-col items-center space-y-2">
               {/* DADOS VARIÁVEIS: Logo acima do nome */}
-              <img src={logo} alt="FutQuinta Logo" className="h-80 w-full object-cover" />
+              <img src={logo} alt="FutQuinta Logo" className="h-80 w-full object-cover" onClick={reloadPage} />
               <h1 className="text-4xl font-thin text-white ">⚽ BID FutDeQuinta 🍻</h1>
             </div>
           </div>
