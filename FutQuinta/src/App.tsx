@@ -39,6 +39,8 @@ function App() {
 
   const [carregando, setCarregando] = useState(false);
 
+  const [timeEditandoModal, setTimeEditandoModal] = useState<'Azul' | 'Vermelho' | null>(null);
+
   useEffect(() => {
     async function carregarPartidas() {
       try {
@@ -79,8 +81,8 @@ function App() {
   const [golsTime2, setGolsTime2] = useState<number>(0)
   
   // DADOS VARIÁVEIS: Estado para o jogador selecionado no select (para adicionar)
-  const [jogadorSelecionadoTime1, setJogadorSelecionadoTime1] = useState<number>(0)
-  const [jogadorSelecionadoTime2, setJogadorSelecionadoTime2] = useState<number>(0)
+  // const [jogadorSelecionadoTime1, setJogadorSelecionadoTime1] = useState<number>(0)
+  // const [jogadorSelecionadoTime2, setJogadorSelecionadoTime2] = useState<number>(0)
 
   // DADOS VARIÁVEIS: Estado para armazenar partidas salvas
   interface PartidaSalva {
@@ -159,28 +161,28 @@ function App() {
   // Função para adicionar jogador ao Time 1
   // DADOS VARIÁVEIS: Adiciona um jogador da lista existente ao time selecionado
   // Garante que o jogador não está em ambos os times e limita a 8 jogadores
-  const adicionarJogadorTime1 = () => {
-    if (jogadorSelecionadoTime1 === 0) return
-    if (jogadoresSelecionadosTime1.includes(jogadorSelecionadoTime1)) return // Evita duplicatas
-    if (jogadoresSelecionadosTime2.includes(jogadorSelecionadoTime1)) return // Evita jogador em ambos os times
-    if (jogadoresSelecionadosTime1.length >= 8) return // Limita a 8 jogadores
+  // const adicionarJogadorTime1 = () => {
+  //   if (jogadorSelecionadoTime1 === 0) return
+  //   if (jogadoresSelecionadosTime1.includes(jogadorSelecionadoTime1)) return // Evita duplicatas
+  //   if (jogadoresSelecionadosTime2.includes(jogadorSelecionadoTime1)) return // Evita jogador em ambos os times
+  //   if (jogadoresSelecionadosTime1.length >= 8) return // Limita a 8 jogadores
     
-    setJogadoresSelecionadosTime1([...jogadoresSelecionadosTime1, jogadorSelecionadoTime1])
-    setJogadorSelecionadoTime1(0) // Reset do select
-  }
+  //   setJogadoresSelecionadosTime1([...jogadoresSelecionadosTime1, jogadorSelecionadoTime1])
+  //   setJogadorSelecionadoTime1(0) // Reset do select
+  // }
 
   // Função para adicionar jogador ao Time 2
   // DADOS VARIÁVEIS: Adiciona um jogador da lista existente ao time selecionado
   // Garante que o jogador não está em ambos os times e limita a 8 jogadores
-  const adicionarJogadorTime2 = () => {
-    if (jogadorSelecionadoTime2 === 0) return
-    if (jogadoresSelecionadosTime2.includes(jogadorSelecionadoTime2)) return // Evita duplicatas
-    if (jogadoresSelecionadosTime1.includes(jogadorSelecionadoTime2)) return // Evita jogador em ambos os times
-    if (jogadoresSelecionadosTime2.length >= 8) return // Limita a 8 jogadores
+  // const adicionarJogadorTime2 = () => {
+  //   if (jogadorSelecionadoTime2 === 0) return
+  //   if (jogadoresSelecionadosTime2.includes(jogadorSelecionadoTime2)) return // Evita duplicatas
+  //   if (jogadoresSelecionadosTime1.includes(jogadorSelecionadoTime2)) return // Evita jogador em ambos os times
+  //   if (jogadoresSelecionadosTime2.length >= 8) return // Limita a 8 jogadores
     
-    setJogadoresSelecionadosTime2([...jogadoresSelecionadosTime2, jogadorSelecionadoTime2])
-    setJogadorSelecionadoTime2(0) // Reset do select
-  }
+  //   setJogadoresSelecionadosTime2([...jogadoresSelecionadosTime2, jogadorSelecionadoTime2])
+  //   setJogadorSelecionadoTime2(0) // Reset do select
+  // }
 
   // Função para remover jogador do Time 1
   const removerJogadorTime1 = (id: number) => {
@@ -192,6 +194,25 @@ function App() {
     setJogadoresSelecionadosTime2(jogadoresSelecionadosTime2.filter(jId => jId !== id))
   }
 
+  const toggleJogador = (id: number) => {
+    if (!timeEditandoModal) return;
+  
+    const isAzul = timeEditandoModal === 'Azul';
+    const timeAtual = isAzul ? jogadoresSelecionadosTime1 : jogadoresSelecionadosTime2;
+    const setTimeAtual = isAzul ? setJogadoresSelecionadosTime1 : setJogadoresSelecionadosTime2;
+    const timeAdversario = isAzul ? jogadoresSelecionadosTime2 : jogadoresSelecionadosTime1;
+  
+    if (timeAtual.includes(id)) {
+      // Se já está no time, remove usando filter
+      setTimeAtual(timeAtual.filter(jId => jId !== id));
+    } else {
+      // Se não está, verifica o limite de 8 e se não está no adversário
+      if (timeAtual.length < 8 && !timeAdversario.includes(id)) {
+        setTimeAtual([...timeAtual, id]);
+      }
+    }
+  };
+
   // Função para obter jogadores disponíveis (não selecionados) para cada time
   // DADOS VARIÁVEIS: Garante que um jogador não pode estar em ambos os times
   const getJogadoresDisponiveisTime1 = () => {
@@ -202,8 +223,8 @@ function App() {
   }
 
   const getJogadoresDisponiveisTime2 = () => {
-    return jogadores.filter(j => 
-      !jogadoresSelecionadosTime2.includes(j.id) && 
+    return jogadores.filter(j =>
+      !jogadoresSelecionadosTime2.includes(j.id) &&
       !jogadoresSelecionadosTime1.includes(j.id)
     )
   }
@@ -311,8 +332,8 @@ function App() {
       setJogadoresSelecionadosTime2([]);
       setGolsTime1(0);
       setGolsTime2(0);
-      setJogadorSelecionadoTime1(0);
-      setJogadorSelecionadoTime2(0);
+      // setJogadorSelecionadoTime1(0);
+      // setJogadorSelecionadoTime2(0);
   
       alert('Partida e estatísticas salvas com sucesso!');
   
@@ -353,29 +374,15 @@ function App() {
               {/* DADOS VARIÁVEIS: Input para adicionar jogadores da lista existente */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Adicionar Jogador
+                  Escalação do Time
                 </label>
                 <div className="flex gap-2">
-                  <select
-                    value={jogadorSelecionadoTime1}
-                    onChange={(e) => setJogadorSelecionadoTime1(parseInt(e.target.value))}
-                    className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                  >
-                    <option value={0}>Selecione um jogador</option>
-                    {/* DADOS VARIÁVEIS: Lista de jogadores disponíveis (não selecionados) */}
-                    {getJogadoresDisponiveisTime1().map((jogador) => (
-                      <option key={jogador.id} value={jogador.id}>
-                        {jogador.nome}
-                      </option>
-                    ))}
-                  </select>
                   <button
-                    onClick={adicionarJogadorTime1}
-                    disabled={jogadorSelecionadoTime1 === 0 || jogadoresSelecionadosTime1.length >= 8}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold rounded-md transition-colors"
-                    title={jogadoresSelecionadosTime1.length >= 8 ? 'Máximo de 8 jogadores atingido' : ''}
+                    onClick={() => setTimeEditandoModal('Azul')}
+                    disabled={jogadoresSelecionadosTime1.length >= 8}
+                    className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white font-semibold rounded-md transition-colors"
                   >
-                    Adicionar
+                    Selecionar Jogadores
                   </button>
                 </div>
               </div>
@@ -428,31 +435,18 @@ function App() {
               
               {/* DADOS VARIÁVEIS: Input para adicionar jogadores da lista existente */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Adicionar Jogador
-                </label>
-                <div className="flex gap-2">
-                  <select
-                    value={jogadorSelecionadoTime2}
-                    onChange={(e) => setJogadorSelecionadoTime2(parseInt(e.target.value))}
-                    className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                  >
-                    <option value={0}>Selecione um jogador</option>
-                    {/* DADOS VARIÁVEIS: Lista de jogadores disponíveis (não selecionados) */}
-                    {getJogadoresDisponiveisTime2().map((jogador) => (
-                      <option key={jogador.id} value={jogador.id}>
-                        {jogador.nome}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={adicionarJogadorTime2}
-                    disabled={jogadorSelecionadoTime2 === 0 || jogadoresSelecionadosTime2.length >= 8}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold rounded-md transition-colors"
-                    title={jogadoresSelecionadosTime2.length >= 8 ? 'Máximo de 8 jogadores atingido' : ''}
-                  >
-                    Adicionar
-                  </button>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Escalação do Time
+                  </label>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setTimeEditandoModal('Vermelho')}
+                      disabled={jogadoresSelecionadosTime2.length >= 8}
+                      className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white font-semibold rounded-md transition-colors"
+                    >
+                      Selecionar Jogadores
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -782,7 +776,61 @@ function App() {
             </div>
           </div>
         </div>
-      </div>
+        {timeEditandoModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col border border-gray-700">
+            
+            {/* 🏷️ Cabeçalho do Modal */}
+            <h2 className="text-xl font-bold text-white">
+              Selecionar Jogadores - Time {timeEditandoModal}
+            </h2>
+            <p className="text-sm text-gray-400 mb-4">
+              Selecionados: {timeEditandoModal === 'Azul' ? jogadoresSelecionadosTime1.length : jogadoresSelecionadosTime2.length} / 8
+            </p>
+
+            {/*Lista com Scroll */}
+            <div className="flex-1 overflow-y-auto space-y-2 pr-2">
+              {jogadores.map((jogador) => {
+                // Lógica para saber se o jogador está no time oposto (bloqueado)
+                const estaNoOutroTime = timeEditandoModal === 'Azul' 
+                  ? jogadoresSelecionadosTime2.includes(jogador.id) 
+                  : jogadoresSelecionadosTime1.includes(jogador.id);
+                
+                // Lógica para saber se está marcado no time atual
+                const estaNoTimeAtual = timeEditandoModal === 'Azul' 
+                  ? jogadoresSelecionadosTime1.includes(jogador.id) 
+                  : jogadoresSelecionadosTime2.includes(jogador.id);
+
+                return (
+                  <div 
+                    key={jogador.id} 
+                    className={`flex items-center justify-between p-3 rounded-md transition-colors ${estaNoOutroTime ? 'bg-gray-900' : 'bg-gray-700 hover:bg-gray-600'}`}
+                  >
+                    <span className={`font-medium ${estaNoOutroTime ? 'text-gray-600' : 'text-white'}`}>
+                      {jogador.nome}
+                    </span>
+                    <input
+                      type="checkbox"
+                      checked={estaNoTimeAtual}
+                      disabled={estaNoOutroTime}
+                      onChange={() => toggleJogador(jogador.id)}
+                      className={`w-5 h-5 cursor-pointer ${timeEditandoModal === 'Azul' ? 'accent-blue-500' : 'accent-red-500'}`}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Botão Final */}
+            <button 
+              onClick={() => setTimeEditandoModal(null)}
+              className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded transition-colors"
+            >
+              Concluir Seleção
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
