@@ -4,6 +4,7 @@ import logo from './assets/newLogo.png'
 
 const API_URL = import.meta.env.VITE_API_URL
 const PASS = import.meta.env.VITE_ADMIN_PASSWORD
+const TITLE = import.meta.env.VITE_TITULO_MAIN
 
 // Interface para definir a estrutura dos dados de um jogador
 interface Jogador {
@@ -357,8 +358,8 @@ function App() {
           <div className="flex justify-center items-center">
             <div className="flex flex-col items-center space-y-2">
               {/* DADOS VARIÁVEIS: Logo acima do nome */}
-              <img src={logo} alt="FutQuinta Logo" className="h-80 w-full object-cover" onClick={reloadPage} />
-              <h1 className="text-4xl font-thin text-white ">⚽ BID FutDeQuinta 🍻</h1>
+              <img src={logo} alt="FutQuinta Logo" className="h-80 w-full object-cover cursor-pointer" onClick={reloadPage} />
+              <h1 className="text-4xl font-thin text-white ">{TITLE}</h1>
             </div>
           </div>
         </div>
