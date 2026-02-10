@@ -55,5 +55,5 @@ dist/
 /chavesSSH/
 chavesSSH/*.txt
 
-#Docker 
+#Docker
 docker-compose.yaml
