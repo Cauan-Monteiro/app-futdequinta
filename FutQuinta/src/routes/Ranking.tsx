@@ -42,6 +42,10 @@ export default function Ranking({
         }
     };
 
+    const mediaVitoriasJogo = (jogador: Jogador) => {
+        return (jogador.vitorias / jogador.partidas).toFixed(2);
+    }
+
     return (
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" >
@@ -91,6 +95,10 @@ export default function Ranking({
                                     <div className="text-center p-2 bg-gray-800 rounded">
                                         <p className="text-red-400">Derrotas</p>
                                         <p className="text-white font-bold text-lg">{jogador.derrotas}</p>
+                                    </div>
+                                    <div className="text-center p-2 bg-gray-800 rounded">
+                                        <p className="text-gray-400">Média Vitórias/Jogo</p>
+                                        <p className="text-white font-bold text-lg">{mediaVitoriasJogo(jogador)}%</p>
                                     </div>
                                 </div>
                             )}
