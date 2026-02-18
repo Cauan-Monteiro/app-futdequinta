@@ -445,7 +445,7 @@ function App() {
                       </label>
                       <input
                         type="number"
-                        value={golsTime1}
+                        placeholder={golsTime1.toString()}
                         onChange={(e) => {
                           const valor = parseInt(e.target.value) || 0
                           setGolsTime1(valor < 0 ? 0 : valor)
@@ -507,7 +507,7 @@ function App() {
                       </label>
                       <input
                         type="number"
-                        value={golsTime2}
+                        placeholder={golsTime2.toString()}
                         onChange={(e) => {
                           const valor = parseInt(e.target.value) || 0
                           setGolsTime2(valor < 0 ? 0 : valor)
