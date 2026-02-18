@@ -61,9 +61,7 @@ export default function Ranking({
                                 className="w-full flex items-center justify-between p-4 hover:bg-gray-700 transition-colors cursor-pointer"
                             >
                                 <div className="flex items-center gap-4">
-                                    <span className={`font-mono font-bold w-6 ${index < 3 ? 'text-yellow-400' : 'text-gray-500'}`}>
-                                        #{index + 1}
-                                    </span>
+                                    <span className={`font-mono font-bold w-6 ${index < 3 ? 'text-yellow-400' : 'text-gray-500'}`}>{index + 1}°</span>
                                     <span className="text-white font-medium text-lg">{jogador.nome}</span>
                                 </div>
 
