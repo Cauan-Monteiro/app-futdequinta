@@ -45,8 +45,13 @@ export default function Ranking({
     const mediaVitoriasJogo = (jogador: Jogador) => {
         return ((jogador.vitorias / jogador.partidas)*100).toFixed(2);
     }
-    const mediaDerrotasJogo = (jogador: Jogador) => {
-        return ((jogador.derrotas / jogador.partidas)*100).toFixed(2);
+    const scoreJogador = (jogador: Jogador) => {
+        if(jogador.partidas === 0){ 
+            return 0.00.toFixed(2);
+        }else if(jogador.partidas <= 2) {
+            return 50.00.toFixed(2);
+        }else{
+            return (((jogador.vitorias * 3) + (jogador.empates))/(jogador.vitorias + jogador.empates + jogador.derrotas)*100).toFixed(2);}
     }
 
     return (
@@ -104,8 +109,8 @@ export default function Ranking({
                                         <p className="text-white font-bold text-lg">{mediaVitoriasJogo(jogador)}%</p>
                                     </div>
                                     <div className="text-center p-2 bg-gray-800 rounded">
-                                        <p className="text-gray-400">Média Derrotas/Jogo</p>
-                                        <p className="text-white font-bold text-lg">{mediaDerrotasJogo(jogador)}%</p>
+                                        <p className="text-gray-400">Score do Jogador</p>
+                                        <p className="text-white font-bold text-lg">{scoreJogador(jogador)}🔥</p>
                                     </div>
                                 </div>
                             )}
