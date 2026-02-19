@@ -51,7 +51,10 @@ export default function Ranking({
         } else if (jogador.partidas <= 2) {
             return 50.00.toFixed(2);
         } else {
-            return (((jogador.vitorias * 3) + (jogador.empates)) / (jogador.vitorias + jogador.empates + jogador.derrotas) * 100).toFixed(2);
+            const pontosPossiveis = jogador.partidas * 3;
+            
+            //Dividimos um pelo outro e multiplicamos por 100
+            return ((jogador.pontos / pontosPossiveis) * 100).toFixed(2);
         }
     }
 
