@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import {Routes, Route, Link } from 'react-router-dom'
 import Ranking from './routes/Ranking'
+import Sorteio from './routes/Sorteio'
 import './App.css'
 import logo from './assets/newLogo.png'
 
@@ -351,9 +352,9 @@ function App() {
   const reloadPage = () => {
     window.location.reload();
   };
-  const warningPage = () => {
-    window.alert("Esta página ainda está em desenvolvimento! Por favor, volte mais tarde.")
-  }
+  // const warningPage = () => {
+  //   window.alert("Esta página ainda está em desenvolvimento! Por favor, volte mais tarde.")
+  // }
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -373,8 +374,8 @@ function App() {
               <Link to="/ranking" className="text-gray-300 hover:text-white transition-colors" >
                 Ranking
               </Link>
-              <Link to="/listConfirm" onClick={warningPage} className="text-gray-300 hover:text-white transition-colors cursor-not-allowed disabled:opacity-50" >
-                Lista de Presença
+              <Link to="/sorteio" className="text-gray-300 hover:text-white transition-colors cursor-pointer" >
+                Sorteador Times
               </Link>
             </div>
             
@@ -618,17 +619,23 @@ function App() {
               </>
             } />
 
-            <Route path="/ranking" element={
-              <Ranking 
-                jogadores={jogadores}
-                jogadorEditando={jogadorEditando}
-                formData={formData}
-                setFormData={setFormData}
-                iniciarEdicao={iniciarEdicao}
-                cancelarEdicao={cancelarEdicao}
-                atualizarJogador={atualizarJogador}
-              />
-              } />
+          <Route path="/ranking" element={
+                      <Ranking
+                        jogadores={jogadores}
+                        jogadorEditando={jogadorEditando}
+                        formData={formData}
+                        setFormData={setFormData}
+                        iniciarEdicao={iniciarEdicao}
+                        cancelarEdicao={cancelarEdicao}
+                        atualizarJogador={atualizarJogador}
+                      />
+                      } />
+
+          <Route path="/sorteio" element={
+            <Sorteio
+              jogadores={jogadores}
+            />
+          } />
         </Routes>
       </div>
       {timeEditandoModal && (
