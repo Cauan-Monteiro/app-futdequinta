@@ -43,15 +43,16 @@ export default function Ranking({
     };
 
     const mediaVitoriasJogo = (jogador: Jogador) => {
-        return ((jogador.vitorias / jogador.partidas)*100).toFixed(2);
+        return ((jogador.vitorias / jogador.partidas) * 100).toFixed(2);
     }
     const scoreJogador = (jogador: Jogador) => {
-        if(jogador.partidas === 0){ 
+        if (jogador.partidas === 0) {
             return 0.00.toFixed(2);
-        }else if(jogador.partidas <= 2) {
+        } else if (jogador.partidas <= 2) {
             return 50.00.toFixed(2);
-        }else{
-            return (((jogador.vitorias * 3) + (jogador.empates))/(jogador.vitorias + jogador.empates + jogador.derrotas)*100).toFixed(2);}
+        } else {
+            return (((jogador.vitorias * 3) + (jogador.empates)) / (jogador.vitorias + jogador.empates + jogador.derrotas) * 100).toFixed(2);
+        }
     }
 
     return (
@@ -86,34 +87,39 @@ export default function Ranking({
                                 </div>
                             </button>
 
-                            {isExpanded && (
-                                <div className="bg-gray-700/50 p-4 border-t border-gray-700 grid grid-cols-2 gap-4 text-sm animate-fadeIn">
-                                    <div className="text-center p-2 bg-gray-800 rounded">
-                                        <p className="text-gray-400">Partidas</p>
-                                        <p className="text-white font-bold text-lg">{jogador.partidas}</p>
-                                    </div>
-                                    <div className="text-center p-2 bg-gray-800 rounded">
-                                        <p className="text-green-400">Vitórias</p>
-                                        <p className="text-white font-bold text-lg">{jogador.vitorias}</p>
-                                    </div>
-                                    <div className="text-center p-2 bg-gray-800 rounded">
-                                        <p className="text-gray-400">Empates</p>
-                                        <p className="text-white font-bold text-lg">{jogador.empates}</p>
-                                    </div>
-                                    <div className="text-center p-2 bg-gray-800 rounded">
-                                        <p className="text-red-400">Derrotas</p>
-                                        <p className="text-white font-bold text-lg">{jogador.derrotas}</p>
-                                    </div>
-                                    <div className="text-center p-2 bg-gray-800 rounded">
-                                        <p className="text-gray-400">Média Vitórias/Jogo</p>
-                                        <p className="text-white font-bold text-lg">{mediaVitoriasJogo(jogador)}%</p>
-                                    </div>
-                                    <div className="text-center p-2 bg-gray-800 rounded">
-                                        <p className="text-gray-400">Score do Jogador</p>
-                                        <p className="text-white font-bold text-lg">{scoreJogador(jogador)}🔥</p>
+                            <div
+                                className={`grid transition-all duration-300 ease-in-out ${isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                                    }`}
+                            >
+                                <div className="overflow-hidden">
+                                    <div className="bg-gray-700/50 p-4 border-t border-gray-700 grid grid-cols-2 gap-4 text-sm">
+                                        <div className="text-center p-2 bg-gray-800 rounded">
+                                            <p className="text-gray-400">Partidas</p>
+                                            <p className="text-white font-bold text-lg">{jogador.partidas}</p>
+                                        </div>
+                                        <div className="text-center p-2 bg-gray-800 rounded">
+                                            <p className="text-green-400">Vitórias</p>
+                                            <p className="text-white font-bold text-lg">{jogador.vitorias}</p>
+                                        </div>
+                                        <div className="text-center p-2 bg-gray-800 rounded">
+                                            <p className="text-gray-400">Empates</p>
+                                            <p className="text-white font-bold text-lg">{jogador.empates}</p>
+                                        </div>
+                                        <div className="text-center p-2 bg-gray-800 rounded">
+                                            <p className="text-red-400">Derrotas</p>
+                                            <p className="text-white font-bold text-lg">{jogador.derrotas}</p>
+                                        </div>
+                                        <div className="text-center p-2 bg-gray-800 rounded">
+                                            <p className="text-gray-400">Média Vitórias/Jogo</p>
+                                            <p className="text-white font-bold text-lg">{mediaVitoriasJogo(jogador)}%</p>
+                                        </div>
+                                        <div className="text-center p-2 bg-gray-800 rounded">
+                                            <p className="text-gray-400">Score do Jogador</p>
+                                            <p className="text-white font-bold text-lg">{scoreJogador(jogador)}🔥</p>
+                                        </div>
                                     </div>
                                 </div>
-                            )}
+                            </div>
                         </div>
                     );
                 })}
