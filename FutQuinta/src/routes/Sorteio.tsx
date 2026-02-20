@@ -4,6 +4,7 @@ import '../App.css'
 interface Jogador {
     id: number;
     nome: string;
+    posicao: "Goleiro" | "Linha";
     pontos: number;
     partidas: number;
     vitorias: number;
@@ -17,6 +18,7 @@ interface SorteioProps {
 
 export default function Sorteio({ jogadores }: SorteioProps) {
     const [sortJogadores, setSortJogadores] = useState<Jogador[]>([]);
+    const [sortGoleiros, setSortGoleiros] = useState<Jogador[]>([]);
 
     const [timeAzul, setTimeAzul] = useState<Jogador[]>([]);
     const [timeVermelho, setTimeVermelho] = useState<Jogador[]>([]);
@@ -35,17 +37,30 @@ export default function Sorteio({ jogadores }: SorteioProps) {
     }
 
     const realizarSorteio = () => {
-        if (sortJogadores.length < 10) {
-            alert("Selecione pelo menos 10 jogadores para realizar o sorteio.");
+        if (sortGoleiros.length < 2) {
+            alert("Selecione pelo menos 2 goleiros para realizar o sorteio.");
+            return;
+        }
+        if (sortJogadores.length < 8) {
+            alert("Selecione pelo menos 8 jogadores de linha para realizar o sorteio.");
             return;
         } 
+
         const jogadoresOrdenados = [...sortJogadores].sort((a, b) => {
             return parseFloat(scoreJogador(b)) - parseFloat(scoreJogador(a));
         });
-        const novoAzul: Jogador[] = [];
-        const novoVermelho: Jogador[] = [];
+        const goleirosOrdenados = [...sortGoleiros].sort((a, b) => {
+            return parseFloat(scoreJogador(b)) - parseFloat(scoreJogador(a));
+        });
+        
+        // Intercalando os goleiros entre os times
+        const timeAzulGoleiro = goleirosOrdenados[0];
+        const timeVermelhoGoleiro = goleirosOrdenados[1];
+
+        const novoAzul: Jogador[] = timeAzulGoleiro ? [timeAzulGoleiro] : [];
+        const novoVermelho: Jogador[] = timeVermelhoGoleiro ? [timeVermelhoGoleiro] : [];
         jogadoresOrdenados.forEach((jogador, index) => {
-            if (index % 2 === 0) {
+            if (index % 4 === 0 || index % 4 === 3) {
                 novoAzul.push(jogador);
             } else {
                 novoVermelho.push(jogador);
@@ -66,9 +81,53 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         });
     };
 
+    const toggleGoleiroSorteio = (jogadorClicado: Jogador) => {
+        setSortGoleiros(prev => {
+            const estaNoSorteio = prev.some(j => j.id === jogadorClicado.id);
+            if (estaNoSorteio) {
+                return prev.filter(j => j.id !== jogadorClicado.id);
+            } else {
+                return [...prev, jogadorClicado];
+            }
+        });
+    };
+
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
             <h2 className="text-3xl font-bold text-white mb-6">Sorteador de Times</h2>
+            
+            <div className="bg-gray-800 rounded-lg p-6 mb-8">
+                <h3 className="text-xl font-bold text-blue-400 mb-4">
+                    Goleiros Presentes ({sortGoleiros.length})
+                </h3>
+                
+                {/* Lista de seleção */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-2">
+                    {(jogadores.filter(j => j.posicao === "Goleiro")).map(jogador => {
+                        // Verifica se o jogador já está no array sortGoleiros
+                        const estaPresente = sortGoleiros.some(j => j.id === jogador.id);
+                        
+                        return (
+                            <div 
+                                key={jogador.id} 
+                                className={`flex items-center justify-between p-3 rounded-md cursor-pointer transition-colors ${
+                                    estaPresente ? 'bg-green-900 border border-green-500' : 'bg-gray-700 hover:bg-gray-600 border border-transparent'
+                                }`}
+                                onClick={() => toggleGoleiroSorteio(jogador)}
+                            >
+                                <span className="text-white font-medium">{jogador.nome}</span>
+                                <input 
+                                    type="checkbox" 
+                                    checked={estaPresente}
+                                    readOnly
+                                    className="w-5 h-5 accent-green-500 cursor-pointer"
+                                />
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+
             
             <div className="bg-gray-800 rounded-lg p-6 mb-8">
                 <h3 className="text-xl font-bold text-blue-400 mb-4">
@@ -77,7 +136,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                 
                 {/* Lista de seleção */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-2">
-                    {jogadores.map(jogador => {
+                    {(jogadores.filter(j => j.posicao === "Linha")).map(jogador => {
                         // Verifica se o jogador já está no array sortJogadores
                         const estaPresente = sortJogadores.some(j => j.id === jogador.id);
                         

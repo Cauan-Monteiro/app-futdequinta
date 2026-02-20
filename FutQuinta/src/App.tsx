@@ -13,6 +13,7 @@ const TITLE = import.meta.env.VITE_TITULO_MAIN
 interface Jogador {
   id: number
   nome: string
+  posicao: "Goleiro" | "Linha"
   pontos: number
   partidas: number
   vitorias: number
@@ -62,15 +63,15 @@ function App() {
 
   // DADOS VARIÁVEIS: Estado para o formulário de atualização
   // Estes valores serão preenchidos quando o usuário selecionar um jogador para editar
-  const [jogadorEditando, setJogadorEditando] = useState<Jogador | null>(null)
-  const [formData, setFormData] = useState({
-    nome: '',
-    pontos: 0,
-    partidas: 0,
-    vitorias: 0,
-    empates: 0,
-    derrotas: 0,
-  })
+  // const [jogadorEditando, setJogadorEditando] = useState<Jogador | null>(null)
+  // const [formData, setFormData] = useState({
+  //   nome: '',
+  //   pontos: 0,
+  //   partidas: 0,
+  //   vitorias: 0,
+  //   empates: 0,
+  //   derrotas: 0,
+  // })
 
   // DADOS VARIÁVEIS: Estados para os dois times
   // Estes dados serão usados para registrar uma partida com jogadores selecionados
@@ -107,59 +108,59 @@ function App() {
   jogadores.sort((a, b) => b.pontos - a.pontos);
 
   // Função para iniciar edição de um jogador
-  const iniciarEdicao = (jogador: Jogador) => {
-    const userInput: string | null = window.prompt("Please enter password: ");
+  // const iniciarEdicao = (jogador: Jogador) => {
+  //   const userInput: string | null = window.prompt("Please enter password: ");
 
-    if (userInput == PASS) {
-      setJogadorEditando(jogador)
-      setFormData({
-        nome: jogador.nome,
-        pontos: jogador.pontos,
-        partidas: jogador.partidas,
-        vitorias: jogador.vitorias,
-        empates: jogador.empates,
-        derrotas: jogador.derrotas,
-      })
-    } else {
-      alert("Esta ação requer permissões de administrador!")
-      console.log("Impossivel alterar os dados de " + jogador.nome + ", ID: " + jogador.id);
-    }
-  }
+  //   if (userInput == PASS) {
+  //     setJogadorEditando(jogador)
+  //     setFormData({
+  //       nome: jogador.nome,
+  //       pontos: jogador.pontos,
+  //       partidas: jogador.partidas,
+  //       vitorias: jogador.vitorias,
+  //       empates: jogador.empates,
+  //       derrotas: jogador.derrotas,
+  //     })
+  //   } else {
+  //     alert("Esta ação requer permissões de administrador!")
+  //     console.log("Impossivel alterar os dados de " + jogador.nome + ", ID: " + jogador.id);
+  //   }
+  // }
 
-  // Função para atualizar dados do jogador
-  const atualizarJogador = async () => {
-    if (!jogadorEditando) return
+  // // Função para atualizar dados do jogador
+  // const atualizarJogador = async () => {
+  //   if (!jogadorEditando) return
 
-    const payload = { ...jogadorEditando, ...formData }
+  //   const payload = { ...jogadorEditando, ...formData }
 
-    try {
-      const res = await fetch(`${API_URL}/jogadores/${jogadorEditando.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+  //   try {
+  //     const res = await fetch(`${API_URL}/jogadores/${jogadorEditando.id}`, {
+  //       method: 'PUT',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify(payload),
+  //     })
 
-      if (!res.ok) throw new Error('Erro ao atualizar jogador')
+  //     if (!res.ok) throw new Error('Erro ao atualizar jogador')
 
-      const atualizado: Jogador = await res.json()
+  //     const atualizado: Jogador = await res.json()
 
-      setJogadores(jogadores.map(j =>
-        j.id === atualizado.id ? atualizado : j
-      ))
+  //     setJogadores(jogadores.map(j =>
+  //       j.id === atualizado.id ? atualizado : j
+  //     ))
 
-      setJogadorEditando(null)
-      setFormData({ nome: '', pontos: 0, partidas: 0, vitorias: 0, empates: 0, derrotas: 0 })
-    } catch (err) {
-      console.error(err)
-      alert('Falha ao atualizar jogador no servidor')
-    }
-  }
+  //     setJogadorEditando(null)
+  //     setFormData({ nome: '', pontos: 0, partidas: 0, vitorias: 0, empates: 0, derrotas: 0 })
+  //   } catch (err) {
+  //     console.error(err)
+  //     alert('Falha ao atualizar jogador no servidor')
+  //   }
+  // }
 
-  // Função para cancelar edição
-  const cancelarEdicao = () => {
-    setJogadorEditando(null)
-    setFormData({ nome: '', pontos: 0, partidas: 0, vitorias: 0, empates: 0, derrotas: 0 })
-  }
+  // // Função para cancelar edição
+  // const cancelarEdicao = () => {
+  //   setJogadorEditando(null)
+  //   setFormData({ nome: '', pontos: 0, partidas: 0, vitorias: 0, empates: 0, derrotas: 0 })
+  // }
 
   // Função para adicionar jogador ao Time 1
   // DADOS VARIÁVEIS: Adiciona um jogador da lista existente ao time selecionado
@@ -622,12 +623,12 @@ function App() {
           <Route path="/ranking" element={
                       <Ranking
                         jogadores={jogadores}
-                        jogadorEditando={jogadorEditando}
-                        formData={formData}
-                        setFormData={setFormData}
-                        iniciarEdicao={iniciarEdicao}
-                        cancelarEdicao={cancelarEdicao}
-                        atualizarJogador={atualizarJogador}
+                        // jogadorEditando={jogadorEditando}
+                        // formData={formData}
+                        // setFormData={setFormData}
+                        // iniciarEdicao={iniciarEdicao}
+                        // cancelarEdicao={cancelarEdicao}
+                        // atualizarJogador={atualizarJogador}
                       />
                       } />
 

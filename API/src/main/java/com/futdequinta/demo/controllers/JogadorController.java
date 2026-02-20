@@ -28,6 +28,7 @@ public class JogadorController {
                 .map(j -> {
                     j.setNome(atualizado.getNome());
                     j.setPontos(atualizado.getPontos());
+                    j.setPosicao(atualizado.getPosicao());
                     j.setPartidas(atualizado.getPartidas());
                     j.setVitorias(atualizado.getVitorias());
                     j.setEmpates(atualizado.getEmpates());

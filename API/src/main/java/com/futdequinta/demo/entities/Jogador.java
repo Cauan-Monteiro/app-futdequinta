@@ -1,5 +1,6 @@
 package com.futdequinta.demo.entities;
 
+import com.futdequinta.demo.enums.Posicao;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -13,6 +14,9 @@ public class Jogador {
 
     private String nome;
     private Integer pontos;
+
+    @Enumerated(EnumType.STRING)
+    private Posicao posicao;
     private Integer partidas;
     private Integer vitorias;
     private Integer empates;
@@ -20,10 +24,11 @@ public class Jogador {
 
     public Jogador() {}
 
-    public Jogador(Long id, String nome, Integer pontos, Integer partidas, Integer vitorias, Integer empates, Integer derrotas) {
+    public Jogador(Long id, String nome, Integer pontos,Posicao posicao, Integer partidas, Integer vitorias, Integer empates, Integer derrotas) {
         this.id = id;
         this.nome = nome;
         this.pontos = pontos;
+        this.posicao = posicao;
         this.partidas = partidas;
         this.vitorias = vitorias;
         this.empates = empates;
@@ -49,6 +54,10 @@ public class Jogador {
     public void setPontos(Integer pontos) {
         this.pontos = pontos;
     }
+
+    public Posicao getPosicao() {return posicao;}
+
+    public void setPosicao(Posicao posicao) {this.posicao = posicao;}
 
     public Integer getPartidas() {
         return partidas;
@@ -100,6 +109,7 @@ public class Jogador {
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", pontos=" + pontos +
+                ", posição=" + posicao +
                 ", partidas=" + partidas +
                 ", vitorias=" + vitorias +
                 ", empates=" + empates +
