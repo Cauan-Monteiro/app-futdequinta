@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import '../App.css'
 
+// const API_URL = import.meta.env.VITE_API_URL
+
 interface Jogador {
     id: number;
     nome: string;
@@ -17,6 +19,19 @@ interface SorteioProps {
 }
 
 export default function Sorteio({ jogadores }: SorteioProps) {
+
+    
+    // const isAvaible = useState(
+    //     () => {
+    //         const dataAtual = new Date().toString().split(" ");
+    //         if (dataAtual[0] === "Thu") {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     }
+    // ); 
+
     const [sortJogadores, setSortJogadores] = useState<Jogador[]>([]);
     const [sortGoleiros, setSortGoleiros] = useState<Jogador[]>([]);
 
@@ -69,6 +84,32 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         setTimeAzul(novoAzul);
         setTimeVermelho(novoVermelho);
     }
+
+    // const salvarSorteio = async () => {
+    //     const jogadoresAzul = timeAzul.map((jogador) => ({
+    //         id: jogador.id,
+    //         time: "Azul"
+    //     }));
+
+    //     const jogadoresVermelho = timeVermelho.map((jogador) => ({
+    //         id: jogador.id,
+    //         time: "Vermelho"
+    //     }));
+
+    //     const todosJogadores = [...jogadoresAzul, ...jogadoresVermelho];
+
+    //     const res = await fetch(`${API_URL}/partidas`, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({
+    //             jogadores: todosJogadores,
+    //         }),
+    //     });
+    //     if (!res.ok) {throw new Error('Erro ao salvar partida')
+
+    //     }else {alert("Sorteio salvo com sucesso! (Funcionalidade em desenvolvimento)");}
+        
+    // }
 
     const toggleJogadorSorteio = (jogadorClicado: Jogador) => {
         setSortJogadores(prev => {
@@ -213,6 +254,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                         </button>
                         
                         <button 
+                            // onClick={!isAvaible ? () => alert("Salvar sorteio estará disponível apenas às quintas-feiras!") : salvarSorteio}
                             disabled
                             className="bg-green-600 text-white font-bold py-2 px-6 rounded opacity-50 cursor-not-allowed"
                         >
