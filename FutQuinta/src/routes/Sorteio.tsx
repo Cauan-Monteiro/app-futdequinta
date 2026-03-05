@@ -20,18 +20,6 @@ interface SorteioProps {
 
 export default function Sorteio({ jogadores }: SorteioProps) {
 
-    
-    // const isAvaible = useState(
-    //     () => {
-    //         const dataAtual = new Date().toString().split(" ");
-    //         if (dataAtual[0] === "Thu") {
-    //             return true;
-    //         } else {
-    //             return false;
-    //         }
-    //     }
-    // ); 
-
     const [sortJogadores, setSortJogadores] = useState<Jogador[]>([]);
     const [sortGoleiros, setSortGoleiros] = useState<Jogador[]>([]);
 
@@ -67,10 +55,10 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         const goleirosOrdenados = [...sortGoleiros].sort((a, b) => {
             return parseFloat(scoreJogador(b)) - parseFloat(scoreJogador(a));
         });
-        
-        // Intercalando os goleiros entre os times
-        const timeAzulGoleiro = goleirosOrdenados[0];
-        const timeVermelhoGoleiro = goleirosOrdenados[1];
+        console.log(goleirosOrdenados);
+        console.log(jogadoresOrdenados);
+        const timeAzulGoleiro = goleirosOrdenados[1];
+        const timeVermelhoGoleiro = goleirosOrdenados[0];
 
         const novoAzul: Jogador[] = timeAzulGoleiro ? [timeAzulGoleiro] : [];
         const novoVermelho: Jogador[] = timeVermelhoGoleiro ? [timeVermelhoGoleiro] : [];
@@ -81,35 +69,13 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                 novoVermelho.push(jogador);
             }
         });
+        console.log(novoAzul);
+        console.log(novoVermelho);
+        console.log("--------------------------------");
         setTimeAzul(novoAzul);
         setTimeVermelho(novoVermelho);
+
     }
-
-    // const salvarSorteio = async () => {
-    //     const jogadoresAzul = timeAzul.map((jogador) => ({
-    //         id: jogador.id,
-    //         time: "Azul"
-    //     }));
-
-    //     const jogadoresVermelho = timeVermelho.map((jogador) => ({
-    //         id: jogador.id,
-    //         time: "Vermelho"
-    //     }));
-
-    //     const todosJogadores = [...jogadoresAzul, ...jogadoresVermelho];
-
-    //     const res = await fetch(`${API_URL}/partidas`, {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify({
-    //             jogadores: todosJogadores,
-    //         }),
-    //     });
-    //     if (!res.ok) {throw new Error('Erro ao salvar partida')
-
-    //     }else {alert("Sorteio salvo com sucesso! (Funcionalidade em desenvolvimento)");}
-        
-    // }
 
     const toggleJogadorSorteio = (jogadorClicado: Jogador) => {
         setSortJogadores(prev => {
