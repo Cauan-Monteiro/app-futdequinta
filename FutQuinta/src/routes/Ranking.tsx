@@ -13,22 +13,10 @@ interface Jogador {
 
 interface RankingProps {
     jogadores: Jogador[];
-    // jogadorEditando: Jogador | null;
-    // formData: any; // Os dados do formulário
-    // setFormData: (data: any) => void; // A função para atualizar o formulário
-    // iniciarEdicao: (jogador: Jogador) => void;
-    // cancelarEdicao: () => void;
-    // atualizarJogador: () => void;
 }
 
 export default function Ranking({
     jogadores,
-    // jogadorEditando,
-    // formData,
-    // setFormData,
-    // iniciarEdicao,
-    // cancelarEdicao,
-    // atualizarJogador
 }: RankingProps) {
 
     const [idExpandido, setIdExpandido] = useState<number | null>(null);
