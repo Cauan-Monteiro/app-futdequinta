@@ -41,7 +41,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
     }
 
     const notaGeral = (f: number, s: number) => {
-        return (s * 0.6) + ((f * 10) * 0.4);
+        return (s * 0.7) + ((f * 10) * 0.3);
     }
 
     const realizarSorteio = () => {
