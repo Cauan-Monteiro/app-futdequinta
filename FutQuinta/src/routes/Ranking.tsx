@@ -2,13 +2,15 @@ import '../App.css'
 import { useState } from 'react';
 
 interface Jogador {
-    id: number;
-    nome: string;
-    pontos: number;
-    partidas: number;
-    vitorias: number;
-    empates: number;
-    derrotas: number;
+    id: number
+    nome: string
+    posicao: "Goleiro" | "Linha"
+    fisico: number
+    pontos: number
+    partidas: number
+    vitorias: number
+    empates: number
+    derrotas: number
 }
 
 interface RankingProps {

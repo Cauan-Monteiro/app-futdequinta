@@ -7,6 +7,7 @@ interface Jogador {
     id: number;
     nome: string;
     posicao: "Goleiro" | "Linha";
+    fisico: number
     pontos: number;
     partidas: number;
     vitorias: number;
@@ -30,7 +31,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         if (jogador.partidas === 0) {
             return 0.00.toFixed(2);
         } else if (jogador.partidas <= 2) {
-            return 50.00.toFixed(2);
+            return 10.00.toFixed(2);
         } else {
             const pontosPossiveis = jogador.partidas * 3;
             
@@ -55,26 +56,65 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         const goleirosOrdenados = [...sortGoleiros].sort((a, b) => {
             return parseFloat(scoreJogador(b)) - parseFloat(scoreJogador(a));
         });
-        console.log(goleirosOrdenados);
-        console.log(jogadoresOrdenados);
         const timeAzulGoleiro = goleirosOrdenados[1];
         const timeVermelhoGoleiro = goleirosOrdenados[0];
 
         const novoAzul: Jogador[] = timeAzulGoleiro ? [timeAzulGoleiro] : [];
         const novoVermelho: Jogador[] = timeVermelhoGoleiro ? [timeVermelhoGoleiro] : [];
-        jogadoresOrdenados.forEach((jogador, index) => {
-            if (index % 4 === 0 || index % 4 === 3) {
-                novoAzul.push(jogador);
-            } else {
-                novoVermelho.push(jogador);
+
+        let somaFisicoAzul = timeAzulGoleiro ? timeAzulGoleiro.fisico : 0;
+        let somaFisicoVermelho = timeVermelhoGoleiro ? timeVermelhoGoleiro.fisico : 0;
+
+        for (let i = 0; i < jogadoresOrdenados.length; i += 2) {
+            const jogadorA = jogadoresOrdenados[i];
+            const jogadorB = jogadoresOrdenados[i + 1];
+    
+            if (!jogadorB) {
+                if (somaFisicoAzul <= somaFisicoVermelho) {
+                    novoAzul.push(jogadorA);
+                    somaFisicoAzul += jogadorA.fisico
+                } else {
+                    novoVermelho.push(jogadorA);
+                    somaFisicoVermelho += jogadorA.fisico
+                }
+                break;
             }
-        });
-        console.log(novoAzul);
-        console.log(novoVermelho);
-        console.log("--------------------------------");
+            // Time Azul mais fraco ou igual
+            if (somaFisicoAzul <= somaFisicoVermelho) {
+                // JogadorA melhor fisicamente
+                if(jogadorA.fisico >= jogadorB.fisico){
+                    novoAzul.push(jogadorA)
+                    somaFisicoAzul += jogadorA.fisico
+
+                    novoVermelho.push(jogadorB)
+                    somaFisicoVermelho += jogadorB.fisico
+                }else{ //JogadorB melhor fisicamente
+                    novoVermelho.push(jogadorA)
+                    somaFisicoVermelho += jogadorA.fisico
+
+                    novoAzul.push(jogadorB)
+                    somaFisicoAzul += jogadorB.fisico
+                }
+            } else { // Time Vermelho mais fraco
+                // JogadorA melhor fisicamente
+                if(jogadorA.fisico >= jogadorB.fisico){
+                    novoVermelho.push(jogadorA)
+                    somaFisicoVermelho += jogadorA.fisico
+
+                    novoAzul.push(jogadorB)
+                    somaFisicoAzul += jogadorB.fisico
+                }else{ //JogadorB melhor fisicamente
+                    novoAzul.push(jogadorA)
+                    somaFisicoAzul += jogadorA.fisico
+
+                    novoVermelho.push(jogadorB)
+                    somaFisicoVermelho += jogadorB.fisico
+                }
+            }
+        }
+
         setTimeAzul(novoAzul);
         setTimeVermelho(novoVermelho);
-
     }
 
     const toggleJogadorSorteio = (jogadorClicado: Jogador) => {

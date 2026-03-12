@@ -30,6 +30,7 @@ public class JogadorController {
                     j.setNome(atualizado.getNome());
                     j.setPontos(atualizado.getPontos());
                     j.setPosicao(atualizado.getPosicao());
+                    j.setFisico(atualizado.getFisico());
                     j.setPartidas(atualizado.getPartidas());
                     j.setVitorias(atualizado.getVitorias());
                     j.setEmpates(atualizado.getEmpates());

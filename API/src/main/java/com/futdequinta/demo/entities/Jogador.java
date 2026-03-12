@@ -17,6 +17,7 @@ public class Jogador {
 
     @Enumerated(EnumType.STRING)
     private Posicao posicao;
+    private Integer fisico;
     private Integer partidas;
     private Integer vitorias;
     private Integer empates;
@@ -24,11 +25,12 @@ public class Jogador {
 
     public Jogador() {}
 
-    public Jogador(Long id, String nome, Integer pontos,Posicao posicao, Integer partidas, Integer vitorias, Integer empates, Integer derrotas) {
+    public Jogador(Long id, String nome, Integer pontos,Posicao posicao, Integer fisico, Integer partidas, Integer vitorias, Integer empates, Integer derrotas) {
         this.id = id;
         this.nome = nome;
         this.pontos = pontos;
         this.posicao = posicao;
+        this.fisico = fisico;
         this.partidas = partidas;
         this.vitorias = vitorias;
         this.empates = empates;
@@ -58,6 +60,10 @@ public class Jogador {
     public Posicao getPosicao() {return posicao;}
 
     public void setPosicao(Posicao posicao) {this.posicao = posicao;}
+
+    public Integer getFisico() {return fisico;}
+
+    public void setFisico(Integer fisico) {this.fisico = fisico;}
 
     public Integer getPartidas() {
         return partidas;
@@ -109,7 +115,8 @@ public class Jogador {
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", pontos=" + pontos +
-                ", posição=" + posicao +
+                ", posicao=" + posicao +
+                ", fisico=" + fisico +
                 ", partidas=" + partidas +
                 ", vitorias=" + vitorias +
                 ", empates=" + empates +

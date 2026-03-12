@@ -14,6 +14,7 @@ interface Jogador {
   id: number
   nome: string
   posicao: "Goleiro" | "Linha"
+  fisico: number
   pontos: number
   partidas: number
   vitorias: number
