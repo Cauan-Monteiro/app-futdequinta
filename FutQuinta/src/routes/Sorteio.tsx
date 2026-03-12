@@ -40,6 +40,10 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         }
     }
 
+    const notaGeral = (f: number, s: number) => {
+        return (s * 0.7) + ((f * 10) * 0.3);
+    }
+
     const realizarSorteio = () => {
         if (sortGoleiros.length < 2) {
             alert("Selecione pelo menos 2 goleiros para realizar o sorteio.");
@@ -48,10 +52,12 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         if (sortJogadores.length < 8) {
             alert("Selecione pelo menos 8 jogadores de linha para realizar o sorteio.");
             return;
-        } 
+        }
 
         const jogadoresOrdenados = [...sortJogadores].sort((a, b) => {
-            return parseFloat(scoreJogador(b)) - parseFloat(scoreJogador(a));
+            let grA = notaGeral(a.fisico, parseFloat(scoreJogador(a)))
+            let grB = notaGeral(b.fisico, parseFloat(scoreJogador(b)))
+            return grB - grA;
         });
         const goleirosOrdenados = [...sortGoleiros].sort((a, b) => {
             return parseFloat(scoreJogador(b)) - parseFloat(scoreJogador(a));
@@ -61,57 +67,64 @@ export default function Sorteio({ jogadores }: SorteioProps) {
 
         const novoAzul: Jogador[] = timeAzulGoleiro ? [timeAzulGoleiro] : [];
         const novoVermelho: Jogador[] = timeVermelhoGoleiro ? [timeVermelhoGoleiro] : [];
+        jogadoresOrdenados.forEach((jogador, index) => {
+            if (index % 4 === 0 || index % 4 === 3) {
+                novoAzul.push(jogador);
+            } else {
+                novoVermelho.push(jogador);
+            }
+        });
 
-        let somaFisicoAzul = timeAzulGoleiro ? timeAzulGoleiro.fisico : 0;
-        let somaFisicoVermelho = timeVermelhoGoleiro ? timeVermelhoGoleiro.fisico : 0;
+        // let somaFisicoAzul = timeAzulGoleiro ? timeAzulGoleiro.fisico : 0;
+        // let somaFisicoVermelho = timeVermelhoGoleiro ? timeVermelhoGoleiro.fisico : 0;
 
-        for (let i = 0; i < jogadoresOrdenados.length; i += 2) {
-            const jogadorA = jogadoresOrdenados[i];
-            const jogadorB = jogadoresOrdenados[i + 1];
+        // for (let i = 0; i < jogadoresOrdenados.length; i += 2) {
+        //     const jogadorA = jogadoresOrdenados[i];
+        //     const jogadorB = jogadoresOrdenados[i + 1];
     
-            if (!jogadorB) {
-                if (somaFisicoAzul <= somaFisicoVermelho) {
-                    novoAzul.push(jogadorA);
-                    somaFisicoAzul += jogadorA.fisico
-                } else {
-                    novoVermelho.push(jogadorA);
-                    somaFisicoVermelho += jogadorA.fisico
-                }
-                break;
-            }
-            // Time Azul mais fraco ou igual
-            if (somaFisicoAzul <= somaFisicoVermelho) {
-                // JogadorA melhor fisicamente
-                if(jogadorA.fisico >= jogadorB.fisico){
-                    novoAzul.push(jogadorA)
-                    somaFisicoAzul += jogadorA.fisico
+        //     if (!jogadorB) {
+        //         if (somaFisicoAzul <= somaFisicoVermelho) {
+        //             novoAzul.push(jogadorA);
+        //             somaFisicoAzul += jogadorA.fisico
+        //         } else {
+        //             novoVermelho.push(jogadorA);
+        //             somaFisicoVermelho += jogadorA.fisico
+        //         }
+        //         break;
+        //     }
+        //     // Time Azul mais fraco ou igual
+        //     if (somaFisicoAzul <= somaFisicoVermelho) {
+        //         // JogadorA melhor fisicamente
+        //         if(jogadorA.fisico >= jogadorB.fisico){
+        //             novoAzul.push(jogadorA)
+        //             somaFisicoAzul += jogadorA.fisico
 
-                    novoVermelho.push(jogadorB)
-                    somaFisicoVermelho += jogadorB.fisico
-                }else{ //JogadorB melhor fisicamente
-                    novoVermelho.push(jogadorA)
-                    somaFisicoVermelho += jogadorA.fisico
+        //             novoVermelho.push(jogadorB)
+        //             somaFisicoVermelho += jogadorB.fisico
+        //         }else{ //JogadorB melhor fisicamente
+        //             novoVermelho.push(jogadorA)
+        //             somaFisicoVermelho += jogadorA.fisico
 
-                    novoAzul.push(jogadorB)
-                    somaFisicoAzul += jogadorB.fisico
-                }
-            } else { // Time Vermelho mais fraco
-                // JogadorA melhor fisicamente
-                if(jogadorA.fisico >= jogadorB.fisico){
-                    novoVermelho.push(jogadorA)
-                    somaFisicoVermelho += jogadorA.fisico
+        //             novoAzul.push(jogadorB)
+        //             somaFisicoAzul += jogadorB.fisico
+        //         }
+        //     } else { // Time Vermelho mais fraco
+        //         // JogadorA melhor fisicamente
+        //         if(jogadorA.fisico >= jogadorB.fisico){
+        //             novoVermelho.push(jogadorA)
+        //             somaFisicoVermelho += jogadorA.fisico
 
-                    novoAzul.push(jogadorB)
-                    somaFisicoAzul += jogadorB.fisico
-                }else{ //JogadorB melhor fisicamente
-                    novoAzul.push(jogadorA)
-                    somaFisicoAzul += jogadorA.fisico
+        //             novoAzul.push(jogadorB)
+        //             somaFisicoAzul += jogadorB.fisico
+        //         }else{ //JogadorB melhor fisicamente
+        //             novoAzul.push(jogadorA)
+        //             somaFisicoAzul += jogadorA.fisico
 
-                    novoVermelho.push(jogadorB)
-                    somaFisicoVermelho += jogadorB.fisico
-                }
-            }
-        }
+        //             novoVermelho.push(jogadorB)
+        //             somaFisicoVermelho += jogadorB.fisico
+        //         }
+        //     }
+        // }
 
         setTimeAzul(novoAzul);
         setTimeVermelho(novoVermelho);
