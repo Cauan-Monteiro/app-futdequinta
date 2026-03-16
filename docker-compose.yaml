@@ -35,6 +35,12 @@ services:
       - certbot_www:/var/www/certbot
       - certbot_certs:/etc/letsencrypt
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot_www:/var/www/certbot
+      - certbot_certs:/etc/letsencrypt
+
 volumes:
   mysql_data:
   certbot_www:
