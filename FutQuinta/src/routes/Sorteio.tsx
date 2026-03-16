@@ -53,6 +53,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
             alert("Selecione pelo menos 8 jogadores de linha para realizar o sorteio.");
             return;
         }
+        console.log(sortJogadores)
 
         const jogadoresOrdenados = [...sortJogadores].sort((a, b) => {
             let grA = notaGeral(a.fisico, parseFloat(scoreJogador(a)))
@@ -64,6 +65,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         });
         const timeAzulGoleiro = goleirosOrdenados[1];
         const timeVermelhoGoleiro = goleirosOrdenados[0];
+        console.log(jogadoresOrdenados)
 
         const novoAzul: Jogador[] = timeAzulGoleiro ? [timeAzulGoleiro] : [];
         const novoVermelho: Jogador[] = timeVermelhoGoleiro ? [timeVermelhoGoleiro] : [];
