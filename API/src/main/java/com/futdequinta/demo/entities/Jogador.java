@@ -1,9 +1,16 @@
 package com.futdequinta.demo.entities;
 
-import com.futdequinta.demo.enums.Posicao;
-import jakarta.persistence.*;
-
 import java.util.Objects;
+
+import com.futdequinta.demo.enums.Posicao;
+
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Jogador {
@@ -17,24 +24,29 @@ public class Jogador {
 
     @Enumerated(EnumType.STRING)
     private Posicao posicao;
-    private Integer fisico;
+
+    @Embedded
+    private Atributos atributos;
+
     private Integer partidas;
     private Integer vitorias;
     private Integer empates;
     private Integer derrotas;
+    private String fotoUrl;
 
     public Jogador() {}
 
-    public Jogador(Long id, String nome, Integer pontos,Posicao posicao, Integer fisico, Integer partidas, Integer vitorias, Integer empates, Integer derrotas) {
+    public Jogador(Long id, String nome, Integer pontos, Posicao posicao, Atributos atributos, Integer partidas, Integer vitorias, Integer empates, Integer derrotas, String fotoUrl) {
         this.id = id;
         this.nome = nome;
         this.pontos = pontos;
         this.posicao = posicao;
-        this.fisico = fisico;
+        this.atributos = atributos;
         this.partidas = partidas;
         this.vitorias = vitorias;
         this.empates = empates;
         this.derrotas = derrotas;
+        this.fotoUrl = fotoUrl;
     }
 
     public Long getId() {
@@ -61,9 +73,9 @@ public class Jogador {
 
     public void setPosicao(Posicao posicao) {this.posicao = posicao;}
 
-    public Integer getFisico() {return fisico;}
+    public Atributos getAtributos() { return atributos; }
 
-    public void setFisico(Integer fisico) {this.fisico = fisico;}
+    public void setAtributos(Atributos atributos) { this.atributos = atributos; }
 
     public Integer getPartidas() {
         return partidas;
@@ -97,6 +109,14 @@ public class Jogador {
         this.derrotas = derrotas;
     }
 
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -116,11 +136,12 @@ public class Jogador {
                 ", nome='" + nome + '\'' +
                 ", pontos=" + pontos +
                 ", posicao=" + posicao +
-                ", fisico=" + fisico +
+                ", atributos=" + atributos +
                 ", partidas=" + partidas +
                 ", vitorias=" + vitorias +
                 ", empates=" + empates +
                 ", derrotas=" + derrotas +
+                ", fotoUrl='" + fotoUrl + '\'' +
                 '}';
     }
 }
