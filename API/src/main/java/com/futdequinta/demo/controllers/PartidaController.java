@@ -17,7 +17,7 @@ import com.futdequinta.demo.repositories.PartidaRepository;
 
 @RestController
 @RequestMapping("/api/partidas")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://futquinta.moteirodev.shop")
 public class PartidaController {
 
     private final PartidaRepository repo;
