@@ -1,6 +1,7 @@
 package com.futdequinta.demo.config;
 
-import com.futdequinta.demo.security.SecurityFilter;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
-import java.util.List;
+import com.futdequinta.demo.security.SecurityFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +31,8 @@ public class SecurityConfig {
                     config.setAllowedOrigins(List.of(
                         "http://localhost",
                         "http://localhost:5173",
-                        "http://129.148.62.223"
+                        "http://129.148.62.223:443",
+                        "https://futquinta.moteirodev.shop/"
                     ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
