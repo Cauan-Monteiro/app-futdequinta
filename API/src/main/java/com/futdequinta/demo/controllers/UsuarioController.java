@@ -72,6 +72,40 @@ public class UsuarioController {
                 .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
     }
 
+    record VincularJogadorRequest(Long jogadorId) {}
+
+    record AlterarRoleRequest(String role, Long companyId) {}
+
+    @PutMapping("/{id}/vincular-jogador")
+    public ResponseEntity<?> vincularJogador(@PathVariable Long id, @RequestBody VincularJogadorRequest req) {
+        return repo.findById(id)
+                .map(u -> {
+                    if (req.jogadorId() == null) {
+                        u.setIdJogador(null);
+                    } else {
+                        jogadorRepo.findById(req.jogadorId()).ifPresent(u::setIdJogador);
+                    }
+                    return ResponseEntity.ok(repo.save(u));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}/alterar-role")
+    public ResponseEntity<?> alterarRole(@PathVariable Long id, @RequestBody AlterarRoleRequest req) {
+        RoleUsuario novaRole;
+        try {
+            novaRole = RoleUsuario.valueOf(req.role());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Role inválida.");
+        }
+        return membershipRepo.findByUsuarioIdAndTimeId(id, req.companyId())
+                .map(m -> {
+                    m.setRole(novaRole);
+                    return ResponseEntity.ok(membershipRepo.save(m));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario user) {
         Usuario usuarioEncontrado = repo.findByEmail(user.getEmail());
