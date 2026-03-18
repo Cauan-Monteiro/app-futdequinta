@@ -12,7 +12,14 @@ interface Jogador {
     empates: number;
     derrotas: number;
     fotoUrl: string;
-    atributos: { attack: number; defense: number; shot: number; pass: number; physical: number; pace: number } | null;
+    atributos: {
+        attack: number | null;
+        defense: number | null;
+        shot: number | null;
+        pass: number | null;
+        physical: number;
+        pace: number | null
+    };
 }
 
 interface CartaProps {
