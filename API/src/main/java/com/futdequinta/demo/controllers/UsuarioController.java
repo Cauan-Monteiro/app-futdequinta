@@ -1,7 +1,21 @@
 package com.futdequinta.demo.controllers;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.futdequinta.demo.entities.Company;
-import com.futdequinta.demo.entities.Jogador;
 import com.futdequinta.demo.entities.Membership;
 import com.futdequinta.demo.entities.Usuario;
 import com.futdequinta.demo.enums.RoleUsuario;
@@ -10,12 +24,6 @@ import com.futdequinta.demo.repositories.JogadorRepository;
 import com.futdequinta.demo.repositories.MembershipRepository;
 import com.futdequinta.demo.repositories.UsuarioRepository;
 import com.futdequinta.demo.security.TokenService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -24,6 +32,9 @@ public class UsuarioController {
 
     @Autowired
     TokenService tokenService;
+    
+    @Autowired
+    private Argon2PasswordEncoder passwordEncoder;
 
     @Autowired
     private JogadorRepository jogadorRepo;
@@ -68,7 +79,24 @@ public class UsuarioController {
         if (usuarioEncontrado == null) {
             return ResponseEntity.status(404).body("Não Encontrado");
         }
-        if (!(usuarioEncontrado.getSenha().equals(user.getSenha()))) {
+        
+        String senhaInformada = user.getSenha();
+        String senhaArmazenada = usuarioEncontrado.getSenha();
+        boolean autenticado = false;
+
+        if (senhaArmazenada.startsWith("$argon2")) {
+            // Senha já hasheada — comparação normal
+            autenticado = passwordEncoder.matches(senhaInformada, senhaArmazenada);
+        } else {
+            // Senha ainda em plaintext — migração transparente
+            if (senhaArmazenada.equals(senhaInformada)) {
+                autenticado = true;
+                usuarioEncontrado.setSenha(passwordEncoder.encode(senhaInformada));
+                repo.save(usuarioEncontrado);
+            }
+        }
+
+        if (!autenticado) {
             return ResponseEntity.status(401).body("Login Invalido");
         }
 
@@ -102,7 +130,7 @@ public class UsuarioController {
         Usuario usuario = new Usuario();
         usuario.setNome(req.nome());
         usuario.setEmail(req.email());
-        usuario.setSenha(req.senha());
+        usuario.setSenha(passwordEncoder.encode(req.senha()));
         usuario.setIdJogador(null);
         Usuario usuarioSalvo = repo.save(usuario);
 
