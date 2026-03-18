@@ -11,12 +11,21 @@ interface Jogador {
     id: number;
     nome: string;
     posicao: "Goleiro" | "Linha";
+    fisico: number
     pontos: number;
     partidas: number;
     vitorias: number;
     empates: number;
     derrotas: number;
     fotoUrl: string | null;
+    atributos: {
+        attack: number | null;
+        defense: number | null;
+        shot: number | null;
+        pass: number | null;
+        physical: number;
+        pace: number | null
+    };
 }
 
 interface SorteioProps {
@@ -93,6 +102,11 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         }
     };
 
+    const notaGeral = (f: number, s: number) => {
+        return (s * 0.8) + ((f * 10) * 0.2);
+    }
+
+
     const realizarSorteio = () => {
         setErroSorteio(null);
 
@@ -106,14 +120,16 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         }
 
         const jogadoresOrdenados = [...sortJogadores].sort((a, b) => {
-            return parseFloat(scoreJogador(b)) - parseFloat(scoreJogador(a));
+            let grA = notaGeral(a.fisico, parseFloat(scoreJogador(a)))
+            let grB = notaGeral(b.fisico, parseFloat(scoreJogador(b)))
+            return grB - grA;
         });
         const goleirosOrdenados = [...sortGoleiros].sort((a, b) => {
             return parseFloat(scoreJogador(b)) - parseFloat(scoreJogador(a));
         });
 
-        const timeAzulGoleiro = goleirosOrdenados[0];
-        const timeVermelhoGoleiro = goleirosOrdenados[1];
+        const timeAzulGoleiro = goleirosOrdenados[1];
+        const timeVermelhoGoleiro = goleirosOrdenados[0];
 
         const novoAzul: Jogador[] = timeAzulGoleiro ? [timeAzulGoleiro] : [];
         const novoVermelho: Jogador[] = timeVermelhoGoleiro ? [timeVermelhoGoleiro] : [];

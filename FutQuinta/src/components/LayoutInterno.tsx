@@ -109,7 +109,6 @@ export function LayoutInterno() {
           <div className="absolute right-4 flex items-center gap-2">
             {confirmandoLogout ? (
               <>
-                <span className="text-gray-300 text-sm">Tem certeza?</span>
                 <button
                   onClick={confirmarLogout}
                   className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"

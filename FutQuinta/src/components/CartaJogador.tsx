@@ -59,16 +59,16 @@ export default function CartaJogador({ jogador, notaGeral }: CartaProps) {
                     
                     {/* Coluna 1 */}
                     <div className="w-[45%] h-[80px] -mt-[40px] border-r border-[#24ccff] flex flex-col items-center">
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.pace ?? 0}</span> PAC</p>
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.shot ?? 0}</span> SHO</p>
+                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.pace ?? 0}</span> RIT</p>
+                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.shot ?? 0}</span> CHU</p>
                         <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.pass ?? 0}</span> PAS</p>
                     </div>
 
                     {/* Coluna 2 */}
                     <div className="w-[45%] h-[80px] -mt-[40px] flex flex-col items-center">
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.attack ?? 0}</span> DRI</p>
+                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.attack ?? 0}</span> ATA</p>
                         <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.defense ?? 0}</span> DEF</p>
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.physical ?? 0}</span> PHY</p>
+                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.physical ?? 0}</span> FIS</p>
                     </div>
                 </div>
             </div>
