@@ -149,7 +149,7 @@ export function LayoutInterno() {
           <div className="flex flex-col gap-8 justify-center items-center">
             <div className="flex flex-col items-center space-y-2">
               <img src={logo} alt="FutQuinta Logo" className="h-full w-48 sm:w-80 object-cover cursor-pointer" onClick={reloadPage} />
-              <h1 className="text-4xl font-thin text-white">{TITLE}</h1>
+              <h1 className="text-2xl font-mono text-white">{TITLE}</h1>
             </div>
             <div className="flex flex-row gap-6 sm:gap-12 w-full h-full justify-center">
               <NavLink to="/home" className={navLinkClass}>Home</NavLink>

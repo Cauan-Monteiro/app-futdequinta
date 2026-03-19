@@ -44,6 +44,8 @@ export default function Sorteio({ jogadores }: SorteioProps) {
     const [timeAzul, setTimeAzul] = useState<Jogador[]>([]);
     const [timeVermelho, setTimeVermelho] = useState<Jogador[]>([]);
     const [jogadorSelecionado, setJogadorSelecionado] = useState<{ jogador: Jogador; time: "Azul" | "Vermelho" } | null>(null);
+    const [trocasRealizadas, setTrocasRealizadas] = useState<String[] | null>(null)
+    const [countTrocas, setCountTrocas] = useState<number>(0)
 
     const scoreJogador = (jogador: Jogador) => {
         if (jogador.partidas === 0) {
@@ -72,8 +74,17 @@ export default function Sorteio({ jogadores }: SorteioProps) {
     };
 
     const realizarTroca = (jogadorSel: Jogador, jogadorAlvo: Jogador) => {
+        if (countTrocas >= 2){
+            return addToast('Número máximo de trocas atingido!', 'error');
+        }
+
         setTimeAzul(prev => prev.map(j => j.id === jogadorSel.id ? jogadorAlvo : j.id === jogadorAlvo.id ? jogadorSel : j));
         setTimeVermelho(prev => prev.map(j => j.id === jogadorSel.id ? jogadorAlvo : j.id === jogadorAlvo.id ? jogadorSel : j));
+        setTrocasRealizadas(prev => [
+            ...(prev ?? []),
+            `Jogador ${jogadorSel.nome} trocado por ${jogadorAlvo.nome}`,
+        ]);
+        setCountTrocas(prev => prev + 1);
         setJogadorSelecionado(null);
     };
 
@@ -110,10 +121,10 @@ export default function Sorteio({ jogadores }: SorteioProps) {
     const realizarSorteio = () => {
         setErroSorteio(null);
 
-        if (sortGoleiros.length < 2) {
-            setErroSorteio("Selecione pelo menos 2 goleiros para realizar o sorteio.");
-            return;
-        }
+        // if (sortGoleiros.length < 2) {
+        //     setErroSorteio("Selecione pelo menos 2 goleiros para realizar o sorteio.");
+        //     return;
+        // }
         if (sortJogadores.length < 8) {
             setErroSorteio("Selecione pelo menos 8 jogadores de linha para realizar o sorteio.");
             return;
@@ -293,6 +304,13 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                                     <span>{j.nome}</span>
                                     <span className="text-xs text-gray-400 ml-2">Score: {scoreJogador(j)}</span>
                                 </div>
+                            ))}
+                        </div>
+
+                        <div>
+                        <h4 className="text-xl font-bold text-red-400 mb-4 text-center">Trocas realizadas!</h4>
+                            {trocasRealizadas?.map((t) => (
+                                <span className="text-xs text-gray-400 ml-2">{t}</span>
                             ))}
                         </div>
                     </div>
