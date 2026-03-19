@@ -306,12 +306,14 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                                 </div>
                             ))}
                         </div>
-
-                        <div>
-                        <h4 className="text-xl font-bold text-red-400 mb-4 text-center">Trocas realizadas!</h4>
-                            {trocasRealizadas?.map((t) => (
-                                <span className="text-xs text-gray-400 ml-2">{t}</span>
-                            ))}
+                        {/** CARD DE TROCAS REALIZADAS */}
+                        <div className="bg-gray-800 border-t-4 border-cyan-500 rounded-xl p-6 shadow-xl">
+                            <div>
+                            <h4 className="text-xl font-bold text-cyan-500 mb-4 text-center">Trocas realizadas!</h4>
+                                {trocasRealizadas?.map((t) => (
+                                    <span className="flex flex-row text-xs text-gray-400 ml-2">{t}</span>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
