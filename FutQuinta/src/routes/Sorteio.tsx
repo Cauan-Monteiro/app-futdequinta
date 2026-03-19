@@ -38,6 +38,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
     const { equipeAtiva } = useContext(AuthContext);
     const [salvando, setSalvando] = useState(false);
     const sorteadosRef = useRef<HTMLDivElement>(null);
+    const gridRef = useRef<HTMLDivElement>(null);
 
     const [sortJogadores, setSortJogadores] = useState<Jogador[]>([]);
     const [sortGoleiros, setSortGoleiros] = useState<Jogador[]>([]);
@@ -118,7 +119,17 @@ export default function Sorteio({ jogadores }: SorteioProps) {
     const compartilharFoto = async () => {
         if (!sorteadosRef.current) return;
         try {
+            // Forçar layout 2 colunas independente do viewport
+            if (gridRef.current) {
+                gridRef.current.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            }
+
             const dataUrl = await toPng(sorteadosRef.current, { cacheBust: true });
+
+            // Restaurar layout responsivo
+            if (gridRef.current) {
+                gridRef.current.style.gridTemplateColumns = '';
+            }
 
             const blob = await (await fetch(dataUrl)).blob();
             const file = new File([blob], 'times-sorteados.png', { type: 'image/png' });
@@ -132,6 +143,10 @@ export default function Sorteio({ jogadores }: SorteioProps) {
             link.href = dataUrl;
             link.click();
         } catch {
+            // Garantir restauração mesmo em caso de erro
+            if (gridRef.current) {
+                gridRef.current.style.gridTemplateColumns = '';
+            }
             addToast('Erro ao gerar a imagem.', 'error');
         }
     };
@@ -325,7 +340,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                     <h3 className="text-2xl font-bold text-white mb-6 text-center">🏆 Times Sorteados</h3>
 
                     <div ref={sorteadosRef} className="bg-gray-900 p-4 rounded-xl">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         {/* CARD DO TIME AZUL */}
                         <div className="bg-gray-800 border-t-4 border-blue-500 rounded-xl p-6 shadow-xl">
                             <h4 className="text-xl font-bold text-blue-400 mb-4 text-center">Time Azul</h4>
