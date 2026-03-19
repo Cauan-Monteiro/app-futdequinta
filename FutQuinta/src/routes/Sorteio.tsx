@@ -322,7 +322,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
             </div>
 
             {timeAzul.length === 0 && (
-                <div className="flex flex-col items-center gap-3 mt-6">
+            <div className="flex flex-col items-center gap-3 mt-6">
                     {erroSorteio && (
                         <p className="text-red-400 text-sm text-center">{erroSorteio}</p>
                     )}
