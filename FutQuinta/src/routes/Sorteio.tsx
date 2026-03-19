@@ -82,7 +82,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         setTimeVermelho(prev => prev.map(j => j.id === jogadorSel.id ? jogadorAlvo : j.id === jogadorAlvo.id ? jogadorSel : j));
         setTrocasRealizadas(prev => [
             ...(prev ?? []),
-            `Jogador ${jogadorSel.nome} trocado por ${jogadorAlvo.nome}`,
+            `${jogadorSel.nome}  ⇄  ${jogadorAlvo.nome}`,
         ]);
         setCountTrocas(prev => prev + 1);
         setJogadorSelecionado(null);
@@ -120,6 +120,8 @@ export default function Sorteio({ jogadores }: SorteioProps) {
 
     const realizarSorteio = () => {
         setErroSorteio(null);
+        setTrocasRealizadas(null);
+        setCountTrocas(0);
 
         // if (sortGoleiros.length < 2) {
         //     setErroSorteio("Selecione pelo menos 2 goleiros para realizar o sorteio.");
@@ -276,18 +278,25 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                 <div className="mt-8 animate-fadeIn">
                     <h3 className="text-2xl font-bold text-white mb-6 text-center">🏆 Times Sorteados</h3>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         {/* CARD DO TIME AZUL */}
                         <div className="bg-gray-800 border-t-4 border-blue-500 rounded-xl p-6 shadow-xl">
                             <h4 className="text-xl font-bold text-blue-400 mb-4 text-center">Time Azul</h4>
                             {timeAzul.map((j) => (
                                 <div
                                     key={j.id}
-                                    onClick={() => setJogadorSelecionado({ jogador: j, time: "Azul" })}
-                                    className={`flex items-center justify-between bg-gray-700 p-3 rounded mb-2 text-white cursor-pointer hover:bg-gray-600 transition-colors ${jogadorSelecionado?.jogador.id === j.id ? 'ring-2 ring-blue-400' : ''}`}
+                                    onClick={() => countTrocas < 2 && setJogadorSelecionado({ jogador: j, time: "Azul" })}
+                                    className={`flex items-center justify-between bg-gray-700 p-3 rounded mb-2 text-white transition-colors
+                                        ${countTrocas < 2 ? 'cursor-pointer hover:bg-gray-600' : 'cursor-not-allowed opacity-70'}
+                                        ${jogadorSelecionado?.jogador.id === j.id ? 'ring-2 ring-blue-400' : ''}`}
                                 >
-                                    <span>{j.nome}</span>
-                                    <span className="text-xs text-gray-400 ml-2">Score: {scoreJogador(j)}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${j.posicao === 'Goleiro' ? 'bg-yellow-700 text-yellow-200' : 'bg-blue-900 text-blue-200'}`}>
+                                            {j.posicao === 'Goleiro' ? 'GL' : 'LN'}
+                                        </span>
+                                        <span>{j.nome}</span>
+                                    </div>
+                                    <span className="text-xs text-gray-400">Score: {scoreJogador(j)}</span>
                                 </div>
                             ))}
                         </div>
@@ -298,23 +307,65 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                             {timeVermelho.map((j) => (
                                 <div
                                     key={j.id}
-                                    onClick={() => setJogadorSelecionado({ jogador: j, time: "Vermelho" })}
-                                    className={`flex items-center justify-between bg-gray-700 p-3 rounded mb-2 text-white cursor-pointer hover:bg-gray-600 transition-colors ${jogadorSelecionado?.jogador.id === j.id ? 'ring-2 ring-red-400' : ''}`}
+                                    onClick={() => countTrocas < 2 && setJogadorSelecionado({ jogador: j, time: "Vermelho" })}
+                                    className={`flex items-center justify-between bg-gray-700 p-3 rounded mb-2 text-white transition-colors
+                                        ${countTrocas < 2 ? 'cursor-pointer hover:bg-gray-600' : 'cursor-not-allowed opacity-70'}
+                                        ${jogadorSelecionado?.jogador.id === j.id ? 'ring-2 ring-red-400' : ''}`}
                                 >
-                                    <span>{j.nome}</span>
-                                    <span className="text-xs text-gray-400 ml-2">Score: {scoreJogador(j)}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${j.posicao === 'Goleiro' ? 'bg-yellow-700 text-yellow-200' : 'bg-red-900 text-red-200'}`}>
+                                            {j.posicao === 'Goleiro' ? 'GL' : 'LN'}
+                                        </span>
+                                        <span>{j.nome}</span>
+                                    </div>
+                                    <span className="text-xs text-gray-400">Score: {scoreJogador(j)}</span>
                                 </div>
                             ))}
                         </div>
-                        {/** CARD DE TROCAS REALIZADAS */}
-                        <div className="bg-gray-800 border-t-4 border-cyan-500 rounded-xl p-6 shadow-xl">
-                            <div>
-                            <h4 className="text-xl font-bold text-cyan-500 mb-4 text-center">Trocas realizadas!</h4>
-                                {trocasRealizadas?.map((t) => (
-                                    <span className="flex flex-row text-xs text-gray-400 ml-2">{t}</span>
+                    </div>
+
+                    {/* CARD DE TROCAS REALIZADAS — largura total abaixo dos times */}
+                    <div className="bg-gray-800 border-t-4 border-cyan-500 rounded-xl p-6 shadow-xl mb-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h4 className="text-lg font-bold text-cyan-400">Trocas Realizadas</h4>
+                            <div className="flex gap-1.5">
+                                {[0, 1].map(i => (
+                                    <span
+                                        key={i}
+                                        className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors
+                                            ${i < countTrocas
+                                                ? 'bg-cyan-600 border-cyan-400 text-white'
+                                                : 'bg-gray-700 border-gray-500 text-gray-500'}`}
+                                    >
+                                        {i + 1}
+                                    </span>
                                 ))}
+                                <span className={`ml-2 text-sm font-medium self-center ${countTrocas >= 2 ? 'text-red-400' : 'text-gray-400'}`}>
+                                    {countTrocas}/2 utilizadas
+                                </span>
                             </div>
                         </div>
+
+                        {!trocasRealizadas || trocasRealizadas.length === 0 ? (
+                            <p className="text-gray-500 text-sm text-center py-2">
+                                {countTrocas >= 2 ? 'Limite de trocas atingido.' : 'Nenhuma troca realizada ainda. Clique em um jogador para trocar.'}
+                            </p>
+                        ) : (
+                            <div className="flex flex-col gap-2">
+                                {trocasRealizadas.map((t, i) => (
+                                    <div key={i} className="flex items-center gap-3 bg-gray-700 rounded-lg px-4 py-2.5">
+                                        <span className="w-5 h-5 rounded-full bg-cyan-700 text-cyan-100 text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
+                                        <span className="text-gray-200 text-sm">{t}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {countTrocas >= 2 && (
+                            <p className="text-red-400 text-xs text-center mt-3 font-medium">
+                                Limite de 2 trocas atingido. Para mais ajustes, refaça o sorteio.
+                            </p>
+                        )}
                     </div>
 
                     <div className="flex flex-col sm:flex-row justify-center gap-4 mt-4">
@@ -326,6 +377,9 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                             onClick={() => {
                                 setTimeAzul([]);
                                 setTimeVermelho([]);
+                                setTrocasRealizadas(null);
+                                setCountTrocas(0);
+                                setJogadorSelecionado(null);
                             }}
                             className="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded transition-colors cursor-pointer"
                         >
