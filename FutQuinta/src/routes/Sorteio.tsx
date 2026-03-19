@@ -39,6 +39,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
     const [salvando, setSalvando] = useState(false);
     const sorteadosRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
+    const trocasListRef = useRef<HTMLDivElement>(null);
 
     const [sortJogadores, setSortJogadores] = useState<Jogador[]>([]);
     const [sortGoleiros, setSortGoleiros] = useState<Jogador[]>([]);
@@ -118,17 +119,26 @@ export default function Sorteio({ jogadores }: SorteioProps) {
 
     const compartilharFoto = async () => {
         if (!sorteadosRef.current) return;
+        const container = sorteadosRef.current;
+        const grid = gridRef.current;
+        const trocasList = trocasListRef.current;
         try {
-            // Forçar layout 2 colunas independente do viewport
-            if (gridRef.current) {
-                gridRef.current.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            container.style.width = '700px';
+            if (grid) grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            if (trocasList) {
+                trocasList.style.display = 'grid';
+                trocasList.style.gridTemplateColumns = 'repeat(2, 1fr)';
             }
 
-            const dataUrl = await toPng(sorteadosRef.current, { cacheBust: true });
+            container.getBoundingClientRect();
 
-            // Restaurar layout responsivo
-            if (gridRef.current) {
-                gridRef.current.style.gridTemplateColumns = '';
+            const dataUrl = await toPng(container, { cacheBust: true });
+
+            container.style.width = '';
+            if (grid) grid.style.gridTemplateColumns = '';
+            if (trocasList) {
+                trocasList.style.display = '';
+                trocasList.style.gridTemplateColumns = '';
             }
 
             const blob = await (await fetch(dataUrl)).blob();
@@ -143,9 +153,11 @@ export default function Sorteio({ jogadores }: SorteioProps) {
             link.href = dataUrl;
             link.click();
         } catch {
-            // Garantir restauração mesmo em caso de erro
-            if (gridRef.current) {
-                gridRef.current.style.gridTemplateColumns = '';
+            container.style.width = '';
+            if (grid) grid.style.gridTemplateColumns = '';
+            if (trocasList) {
+                trocasList.style.display = '';
+                trocasList.style.gridTemplateColumns = '';
             }
             addToast('Erro ao gerar a imagem.', 'error');
         }
@@ -413,7 +425,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                                 {countTrocas >= 2 ? 'Limite de trocas atingido.' : 'Nenhuma troca realizada ainda. Clique em um jogador para trocar.'}
                             </p>
                         ) : (
-                            <div className="flex flex-col gap-2">
+                            <div ref={trocasListRef} className="flex flex-col gap-2">
                                 {trocasRealizadas.map((t, i) => (
                                     <div key={i} className="flex items-center gap-3 bg-gray-700 rounded-lg px-4 py-2.5">
                                         <span className="w-5 h-5 rounded-full bg-cyan-700 text-cyan-100 text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
