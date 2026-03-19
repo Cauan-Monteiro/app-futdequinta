@@ -1,4 +1,5 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
+import { toPng } from 'html-to-image';
 import { useOutletContext } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { AuthContext } from '../components/AuthContext';
@@ -36,6 +37,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
     const { addToast } = useOutletContext<OutletToastCtx>();
     const { equipeAtiva } = useContext(AuthContext);
     const [salvando, setSalvando] = useState(false);
+    const sorteadosRef = useRef<HTMLDivElement>(null);
 
     const [sortJogadores, setSortJogadores] = useState<Jogador[]>([]);
     const [sortGoleiros, setSortGoleiros] = useState<Jogador[]>([]);
@@ -110,6 +112,27 @@ export default function Sorteio({ jogadores }: SorteioProps) {
             addToast('Erro ao salvar o time sorteado.', 'error');
         } finally {
             setSalvando(false);
+        }
+    };
+
+    const compartilharFoto = async () => {
+        if (!sorteadosRef.current) return;
+        try {
+            const dataUrl = await toPng(sorteadosRef.current, { cacheBust: true });
+
+            const blob = await (await fetch(dataUrl)).blob();
+            const file = new File([blob], 'times-sorteados.png', { type: 'image/png' });
+            if (navigator.canShare?.({ files: [file] })) {
+                await navigator.share({ files: [file], title: 'Times Sorteados' });
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = 'times-sorteados.png';
+            link.href = dataUrl;
+            link.click();
+        } catch {
+            addToast('Erro ao gerar a imagem.', 'error');
         }
     };
 
@@ -301,6 +324,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                 <div className="mt-8 animate-fadeIn">
                     <h3 className="text-2xl font-bold text-white mb-6 text-center">🏆 Times Sorteados</h3>
 
+                    <div ref={sorteadosRef} className="bg-gray-900 p-4 rounded-xl">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         {/* CARD DO TIME AZUL */}
                         <div className="bg-gray-800 border-t-4 border-blue-500 rounded-xl p-6 shadow-xl">
@@ -390,11 +414,18 @@ export default function Sorteio({ jogadores }: SorteioProps) {
                             </p>
                         )}
                     </div>
+                    </div>
 
                     <div className="flex flex-col sm:flex-row justify-center gap-4 mt-4">
                         <button onClick={salvarTimeSorteado} disabled={salvando}
                             className="bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow-lg transition-colors cursor-pointer">
                             {salvando ? 'Salvando...' : 'Salvar Time'}
+                        </button>
+                        <button
+                            onClick={compartilharFoto}
+                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded shadow-lg transition-colors cursor-pointer"
+                        >
+                            Compartilhar Foto
                         </button>
                         <button
                             onClick={() => {
