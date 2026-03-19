@@ -123,10 +123,6 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         setTrocasRealizadas(null);
         setCountTrocas(0);
 
-        // if (sortGoleiros.length < 2) {
-        //     setErroSorteio("Selecione pelo menos 2 goleiros para realizar o sorteio.");
-        //     return;
-        // }
         if (sortJogadores.length < 8) {
             setErroSorteio("Selecione pelo menos 8 jogadores de linha para realizar o sorteio.");
             return;
@@ -141,18 +137,45 @@ export default function Sorteio({ jogadores }: SorteioProps) {
             return parseFloat(scoreJogador(b)) - parseFloat(scoreJogador(a));
         });
 
-        const timeAzulGoleiro = goleirosOrdenados[1];
-        const timeVermelhoGoleiro = goleirosOrdenados[0];
+        let novoAzul: Jogador[];
+        let novoVermelho: Jogador[];
 
-        const novoAzul: Jogador[] = timeAzulGoleiro ? [timeAzulGoleiro] : [];
-        const novoVermelho: Jogador[] = timeVermelhoGoleiro ? [timeVermelhoGoleiro] : [];
-        jogadoresOrdenados.forEach((jogador, index) => {
-            if (index % 4 === 0 || index % 4 === 3) {
-                novoAzul.push(jogador);
-            } else {
-                novoVermelho.push(jogador);
-            }
-        });
+        if (sortGoleiros.length === 1) {
+            // Vermelho recebe o único GK mas fica com menos 1 jogador de linha como compensação
+            novoVermelho = [goleirosOrdenados[0]];
+            novoAzul = [];
+
+            const N = jogadoresOrdenados.length;
+            const vermelhoTarget = Math.ceil(N / 2) - 1;
+            let vermelhoCount = 0;
+
+            jogadoresOrdenados.forEach((jogador, index) => {
+                const posInGroup = index % 4;
+                const wouldGoVermelho = posInGroup === 1 || posInGroup === 2;
+                if (wouldGoVermelho && vermelhoCount < vermelhoTarget) {
+                    novoVermelho.push(jogador);
+                    vermelhoCount++;
+                } else {
+                    novoAzul.push(jogador);
+                }
+            });
+        } else {
+            // Caso 0 GK ou 2+ GKs: snake-draft padrão
+            const timeAzulGoleiro = goleirosOrdenados[1];
+            const timeVermelhoGoleiro = goleirosOrdenados[0];
+
+            novoAzul = timeAzulGoleiro ? [timeAzulGoleiro] : [];
+            novoVermelho = timeVermelhoGoleiro ? [timeVermelhoGoleiro] : [];
+
+            jogadoresOrdenados.forEach((jogador, index) => {
+                if (index % 4 === 0 || index % 4 === 3) {
+                    novoAzul.push(jogador);
+                } else {
+                    novoVermelho.push(jogador);
+                }
+            });
+        }
+
         setTimeAzul(novoAzul);
         setTimeVermelho(novoVermelho);
     }
