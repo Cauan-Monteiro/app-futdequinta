@@ -123,7 +123,7 @@ export default function Sorteio({ jogadores }: SorteioProps) {
         const grid = gridRef.current;
         const trocasList = trocasListRef.current;
         try {
-            container.style.width = '700px';
+            container.style.width = '1024px';
             if (grid) grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
             if (trocasList) {
                 trocasList.style.display = 'grid';
