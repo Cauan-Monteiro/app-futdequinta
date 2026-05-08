@@ -17,7 +17,7 @@ interface Jogador {
   vitorias: number;
   empates: number;
   derrotas: number;
-  fotoUrl: string | null;
+  fotoUrl: string ;
   atributos: {
       attack: number | null;
       defense: number | null;
