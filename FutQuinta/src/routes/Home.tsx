@@ -11,20 +11,21 @@ interface Jogador {
   id: number;
   nome: string;
   posicao: "Goleiro" | "Linha";
+  fisico: number
   pontos: number;
   partidas: number;
   vitorias: number;
   empates: number;
   derrotas: number;
-  fotoUrl: string;
+  fotoUrl: string | null;
   atributos: {
-    attack: number | null;
-    defense: number | null;
-    shot: number | null;
-    pass: number | null;
-    physical: number;
-    pace: number | null;
-  }
+      attack: number | null;
+      defense: number | null;
+      shot: number | null;
+      pass: number | null;
+      physical: number;
+      pace: number | null
+  };
 }
 
 interface PartidaSalva {
@@ -246,18 +247,24 @@ export default function Home({ jogadores, carregarJogadores }: HomeProps) {
         <h2 className="text-3xl font-bold text-white mb-6">Registrar Partida</h2>
 
         {/* ZONA 1: Scoreboard com steppers */}
-        <div className="bg-gray-800 rounded-xl shadow-lg p-6 mb-6 flex flex-col sm:flex-row items-center justify-around gap-4 sm:gap-0">
+        <div className="rounded-xl shadow-lg mb-6 flex flex-col sm:flex-row items-center justify-around gap-4 sm:gap-0 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, var(--color-surface-card), var(--color-surface-base))', border: '1px solid var(--color-surface-border)', padding: '1.5rem' }}>
+          {/* Color strips */}
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-l-xl" />
+          <div className="absolute right-0 top-0 bottom-0 w-1 bg-red-500 rounded-r-xl" />
+
           <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
             <span className="text-blue-400 font-bold text-lg tracking-wide">Time Azul</span>
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setGolsTime1(g => Math.max(0, g - 1))}
-                className="w-11 h-11 flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white font-bold text-xl rounded-full transition-colors cursor-pointer"
+                className="w-11 h-11 flex items-center justify-center text-white font-bold text-xl rounded-full transition-all duration-150 cursor-pointer active:scale-90 hover:text-[var(--color-brand-score)]"
+                style={{ backgroundColor: 'var(--color-surface-raised)', border: '1px solid var(--color-surface-border)' }}
               >−</button>
-              <span className="text-6xl font-black text-white w-16 text-center">{golsTime1}</span>
+              <span className="text-7xl text-white w-20 text-center tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>{golsTime1}</span>
               <button
                 onClick={() => setGolsTime1(g => g + 1)}
-                className="w-11 h-11 flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white font-bold text-xl rounded-full transition-colors cursor-pointer"
+                className="w-11 h-11 flex items-center justify-center text-white font-bold text-xl rounded-full transition-all duration-150 cursor-pointer active:scale-90 hover:text-[var(--color-brand-score)]"
+                style={{ backgroundColor: 'var(--color-surface-raised)', border: '1px solid var(--color-surface-border)' }}
               >+</button>
             </div>
           </div>
@@ -279,12 +286,14 @@ export default function Home({ jogadores, carregarJogadores }: HomeProps) {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setGolsTime2(g => Math.max(0, g - 1))}
-                className="w-11 h-11 flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white font-bold text-xl rounded-full transition-colors cursor-pointer"
+                className="w-11 h-11 flex items-center justify-center text-white font-bold text-xl rounded-full transition-all duration-150 cursor-pointer active:scale-90 hover:text-[var(--color-brand-score)]"
+                style={{ backgroundColor: 'var(--color-surface-raised)', border: '1px solid var(--color-surface-border)' }}
               >−</button>
-              <span className="text-6xl font-black text-white w-16 text-center">{golsTime2}</span>
+              <span className="text-7xl text-white w-20 text-center tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>{golsTime2}</span>
               <button
                 onClick={() => setGolsTime2(g => g + 1)}
-                className="w-11 h-11 flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white font-bold text-xl rounded-full transition-colors cursor-pointer"
+                className="w-11 h-11 flex items-center justify-center text-white font-bold text-xl rounded-full transition-all duration-150 cursor-pointer active:scale-90 hover:text-[var(--color-brand-score)]"
+                style={{ backgroundColor: 'var(--color-surface-raised)', border: '1px solid var(--color-surface-border)' }}
               >+</button>
             </div>
           </div>
@@ -445,25 +454,25 @@ export default function Home({ jogadores, carregarJogadores }: HomeProps) {
                 })
 
                 return (
-                  <div key={partida.id} className="bg-gray-800 rounded-xl shadow-xl p-6 min-w-full md:w-1/4 box-border scrollbar-hide snap-center">
+                  <div key={partida.id} className="rounded-xl shadow-xl p-6 min-w-full md:w-1/4 box-border scrollbar-hide snap-center hover:-translate-y-1 hover:shadow-black/40 transition-all duration-200" style={{ backgroundColor: 'var(--color-surface-card)', border: '1px solid var(--color-surface-border)' }}>
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-xs text-gray-400">{dataFormatada}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${partida.vencedor === 'Azul' ? 'bg-blue-500 text-white' :
-                          partida.vencedor === 'Vermelho' ? 'bg-red-500 text-white' :
-                            'bg-gray-500 text-white'
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${partida.vencedor === 'Azul' ? 'bg-blue-500/20 text-blue-300 border-blue-500/40' :
+                          partida.vencedor === 'Vermelho' ? 'bg-red-500/20 text-red-300 border-red-500/40' :
+                            'bg-gray-500/20 text-gray-400 border-gray-500/40'
                           }`}>
                           {partida.vencedor}
                         </span>
                       </div>
                       <div className="flex justify-between items-center mb-4">
                         <div className="text-center">
-                          <p className="text-blue-400 font-bold text-lg">{partida.golsAzul}</p>
+                          <p className="text-blue-400 text-4xl" style={{ fontFamily: 'var(--font-display)' }}>{partida.golsAzul}</p>
                           <p className="text-xs text-gray-400">Time Azul</p>
                         </div>
                         <span className="text-gray-500 text-2xl lg:text-4xl font-black">×</span>
                         <div className="text-center">
-                          <p className="text-red-400 font-bold text-lg">{partida.golsVermelho}</p>
+                          <p className="text-red-400 text-4xl" style={{ fontFamily: 'var(--font-display)' }}>{partida.golsVermelho}</p>
                           <p className="text-xs text-gray-400">Time Vermelho</p>
                         </div>
                       </div>
@@ -517,7 +526,7 @@ export default function Home({ jogadores, carregarJogadores }: HomeProps) {
         </div>
       )}
 
-      <div className="mb-8 bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6">
+      <div className="mb-8 rounded-2xl shadow-lg p-4 sm:p-6" style={{ background: 'linear-gradient(135deg, var(--color-surface-card), var(--color-surface-base))', border: '1px solid var(--color-surface-border)' }}>
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center tracking-wide">
           Comparar BIDs
         </h2>
@@ -571,7 +580,7 @@ export default function Home({ jogadores, carregarJogadores }: HomeProps) {
           {/* ── DIVISOR VS ── */}
           <div className="flex flex-row items-center gap-2 py-6 lg:flex-col lg:items-center lg:justify-start lg:pt-[140px] lg:gap-3 lg:py-0">
             <div className="flex-1 h-px bg-gray-600/60 lg:flex-none lg:w-px lg:h-16"></div>
-            <span className="text-gray-500 font-black text-2xl lg:text-4xl tracking-[0.2em] shrink-0">VS</span>
+            <span className="font-black text-2xl lg:text-5xl tracking-[0.2em] shrink-0" style={{ fontFamily: 'var(--font-display)', color: 'rgba(34,211,238,0.7)' }}>VS</span>
             <div className="flex-1 h-px bg-gray-600/60 lg:flex-none lg:w-px lg:h-16"></div>
           </div>
 

@@ -153,16 +153,27 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
-            <div className="w-full max-w-md">
+        <div className="min-h-screen relative flex items-center justify-center px-4 overflow-hidden" style={{ backgroundColor: 'var(--color-surface-base)' }}>
+            {/* Football pitch grid pattern */}
+            <div
+                className="absolute inset-0 opacity-[0.04] pointer-events-none"
+                style={{
+                    backgroundImage: 'repeating-linear-gradient(0deg, #fff 0px, #fff 1px, transparent 1px, transparent 60px), repeating-linear-gradient(90deg, #fff 0px, #fff 1px, transparent 1px, transparent 60px)'
+                }}
+            />
+            {/* Color orbs */}
+            <div className="absolute top-1/4 -left-32 w-96 h-96 rounded-full pointer-events-none" style={{ backgroundColor: 'var(--color-brand-pitch)', opacity: 0.15, filter: 'blur(128px)' }} />
+            <div className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full pointer-events-none" style={{ backgroundColor: 'var(--color-brand-score)', opacity: 0.08, filter: 'blur(128px)' }} />
+
+            <div className="w-full max-w-md relative z-10">
                 {/* Logo/Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 tracking-tight">FutQuinta</h1>
+                    <h1 className="text-5xl sm:text-6xl tracking-wider text-white mb-2" style={{ fontFamily: 'var(--font-display)' }}>FutQuinta</h1>
                     <p className="text-gray-400">Gerencie seus times e partidas</p>
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8 border border-gray-700 ring-1 ring-white/5">
+                <div className="rounded-2xl shadow-2xl shadow-black/40 p-6 sm:p-8 border" style={{ backgroundColor: 'rgba(35, 41, 56, 0.85)', borderColor: 'var(--color-surface-border)', backdropFilter: 'blur(16px)' }}>
                     <h2 className="text-2xl font-bold text-white mb-6 text-center">Login</h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -179,7 +190,8 @@ export default function Login() {
                                 onChange={handleChange}
                                 placeholder="seu.email@exemplo.com"
                                 required
-                                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-colors"
+                                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-[var(--color-brand-score)]/50 transition-colors"
+                                style={{ '--tw-ring-color': 'rgba(34,211,238,0.4)' } as React.CSSProperties}
                             />
                         </div>
 
@@ -197,7 +209,8 @@ export default function Login() {
                                     onChange={handleChange}
                                     placeholder="••••••••"
                                     required
-                                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-colors"
+                                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:border-[var(--color-brand-score)]/50 transition-colors"
+                                    style={{ '--tw-ring-color': 'rgba(34,211,238,0.4)' } as React.CSSProperties}
                                 />
                                 <button
                                     type="button"
@@ -233,7 +246,8 @@ export default function Login() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white font-semibold py-3 px-4 rounded-xl tracking-wide shadow-lg transition-colors cursor-pointer"
+                            className="w-full disabled:bg-gray-600 text-white font-semibold py-3 px-4 rounded-xl tracking-wide shadow-lg transition-all duration-150 cursor-pointer hover:brightness-110 active:scale-[0.98]"
+                            style={{ background: loading ? undefined : 'linear-gradient(to right, var(--color-brand-pitch), var(--color-brand-grass))' }}
                         >
                             {loading ? (
                                 <div className="flex items-center justify-center">
@@ -257,7 +271,7 @@ export default function Login() {
                     <button
                         type="button"
                         onClick={() => setShowCadastro(true)}
-                        className="w-full bg-transparent border border-gray-600 hover:border-cyan-500/60 hover:text-cyan-400 text-gray-300 font-semibold py-3 px-4 rounded-xl tracking-wide transition-colors cursor-pointer"
+                        className="w-full bg-transparent border border-gray-600 hover:border-[var(--color-brand-score)]/60 hover:text-[var(--color-brand-score)] text-gray-300 font-semibold py-3 px-4 rounded-xl tracking-wide transition-colors cursor-pointer"
                     >
                         Criar uma conta
                     </button>
@@ -292,7 +306,7 @@ export default function Login() {
             {/* Modal Criar Conta */}
             {showCadastro && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4 z-50">
-                    <div className="w-full max-w-md bg-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8 border border-gray-700 ring-1 ring-white/5">
+                    <div className="w-full max-w-md rounded-2xl shadow-2xl p-6 sm:p-8 border" style={{ backgroundColor: 'rgba(35, 41, 56, 0.95)', borderColor: 'var(--color-surface-border)', backdropFilter: 'blur(16px)' }}>
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-2xl font-bold text-white">Criar conta</h2>
                             <button
@@ -410,7 +424,7 @@ export default function Login() {
                                     <p className="text-red-400 text-sm">{erroCadastro}</p>
                                 </div>
                             )}
-                            
+
 
                             <div className="flex gap-3 pt-1">
                                 <button

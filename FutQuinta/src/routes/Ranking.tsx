@@ -18,23 +18,24 @@ interface RankingProps {
     carregando: boolean;
 }
 
+const fallbackAvatar = 'https://res.cloudinary.com/dk9fhp8d8/image/upload/w_453,h_594,c_fill/iconJogador_g2wkq9.png';
+
 function SkeletonRow() {
     return (
-        <div className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700/50 animate-pulse">
-            <div className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-4">
-                    <div className="w-6 h-5 bg-gray-700 rounded" />
-                    <div className="w-36 h-5 bg-gray-700 rounded" />
-                    <div className="w-8 h-5 bg-gray-700 rounded" />
-                </div>
-                <div className="flex items-center gap-4">
-                    <div className="w-16 h-5 bg-gray-700 rounded" />
-                    <div className="w-4 h-4 bg-gray-700 rounded" />
-                </div>
+        <div className="rounded-xl overflow-hidden border" style={{ backgroundColor: 'var(--color-surface-card)', borderColor: 'var(--color-surface-border)' }}>
+            <div className="h-14 relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
             </div>
         </div>
     );
 }
+
+const rowBorderColor = (index: number) => {
+    if (index === 0) return 'var(--color-brand-gold)';
+    if (index === 1) return 'var(--color-brand-silver)';
+    if (index === 2) return 'var(--color-brand-bronze)';
+    return 'transparent';
+};
 
 export default function Ranking({ jogadores, carregando }: RankingProps) {
 
@@ -64,6 +65,54 @@ export default function Ranking({ jogadores, carregando }: RankingProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h2 className="text-3xl font-bold text-white mb-6">Estatísticas dos Jogadores</h2>
 
+            {/* Podium — top 3 */}
+            {!carregando && jogadores.length >= 3 && (
+                <div className="flex items-end justify-center gap-3 mb-10 mt-4">
+                    {/* 2nd place */}
+                    <div className="flex flex-col items-center gap-2">
+                        <img
+                            src={jogadores[1].fotoUrl ?? fallbackAvatar}
+                            alt={jogadores[1].nome}
+                            className="w-14 h-14 rounded-full object-cover border-2"
+                            style={{ borderColor: 'var(--color-brand-silver)' }}
+                        />
+                        <span className="text-xs text-gray-300 font-semibold truncate max-w-[80px] text-center">{jogadores[1].nome}</span>
+                        <div className="w-20 h-16 rounded-t-lg flex items-center justify-center border" style={{ backgroundColor: 'var(--color-surface-raised)', borderColor: 'var(--color-surface-border)' }}>
+                            <span className="text-3xl" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-brand-silver)' }}>2</span>
+                        </div>
+                    </div>
+                    {/* 1st place — taller */}
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="relative">
+                            <img
+                                src={jogadores[0].fotoUrl ?? fallbackAvatar}
+                                alt={jogadores[0].nome}
+                                className="w-16 h-16 rounded-full object-cover border-2"
+                                style={{ borderColor: 'var(--color-brand-gold)' }}
+                            />
+                            <span className="absolute -top-2 -right-2 text-base">🏆</span>
+                        </div>
+                        <span className="text-xs text-white font-bold truncate max-w-[90px] text-center">{jogadores[0].nome}</span>
+                        <div className="w-24 h-24 rounded-t-lg flex items-center justify-center border" style={{ background: 'linear-gradient(to bottom, rgba(245,158,11,0.2), var(--color-surface-raised))', borderColor: 'rgba(245,158,11,0.3)' }}>
+                            <span className="text-5xl" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-brand-gold)' }}>1</span>
+                        </div>
+                    </div>
+                    {/* 3rd place */}
+                    <div className="flex flex-col items-center gap-2">
+                        <img
+                            src={jogadores[2].fotoUrl ?? fallbackAvatar}
+                            alt={jogadores[2].nome}
+                            className="w-12 h-12 rounded-full object-cover border-2"
+                            style={{ borderColor: 'var(--color-brand-bronze)' }}
+                        />
+                        <span className="text-xs text-gray-400 font-medium truncate max-w-[72px] text-center">{jogadores[2].nome}</span>
+                        <div className="w-20 h-10 rounded-t-lg flex items-center justify-center border" style={{ backgroundColor: 'var(--color-surface-raised)', borderColor: 'var(--color-surface-border)' }}>
+                            <span className="text-2xl" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-brand-bronze)' }}>3</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <h3 className="text-xl font-bold text-white mb-4 mt-8 tracking-wide border-b border-gray-700/50 pb-2">Classificação Geral</h3>
 
             {carregando ? (
@@ -82,13 +131,22 @@ export default function Ranking({ jogadores, carregando }: RankingProps) {
                 <div className="space-y-2">
                     {jogadores.map((jogador, index) => {
                         const isExpanded = idExpandido === jogador.id;
+                        const winRate = parseFloat(mediaVitoriasJogo(jogador));
 
                         return (
-                            <div key={jogador.id} className={`bg-gray-800 rounded-xl overflow-hidden transition-all duration-200 border border-gray-700/50${index < 3 ? ' ring-1 ring-yellow-400/20' : ''}`}>
-
+                            <div
+                                key={jogador.id}
+                                className="rounded-xl overflow-hidden transition-all duration-200 border-l-4"
+                                style={{
+                                    backgroundColor: 'var(--color-surface-card)',
+                                    borderLeftColor: rowBorderColor(index),
+                                    border: `1px solid var(--color-surface-border)`,
+                                    borderLeft: `4px solid ${rowBorderColor(index)}`
+                                }}
+                            >
                                 <button
                                     onClick={() => toggleAccordion(jogador.id)}
-                                    className="w-full flex items-center justify-between p-4 hover:bg-gray-700 transition-colors cursor-pointer"
+                                    className="w-full flex items-center justify-between p-4 transition-colors cursor-pointer hover:bg-white/5"
                                     title="Clique para ver estatísticas detalhadas"
                                 >
                                     <div className="flex items-center gap-4">
@@ -100,7 +158,8 @@ export default function Ranking({ jogadores, carregando }: RankingProps) {
                                     </div>
 
                                     <div className="flex items-center gap-4">
-                                        <span className="text-gray-300 font-bold">{jogador.pontos} pts</span>
+                                        <span className="font-bold text-2xl" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-brand-score)' }}>{jogador.pontos}</span>
+                                        <span className="text-gray-500 text-xs">pts</span>
                                         <svg
                                             className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                                             fill="none"
@@ -116,28 +175,40 @@ export default function Ranking({ jogadores, carregando }: RankingProps) {
                                     className={`grid transition-all duration-300 ease-in-out ${isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
                                 >
                                     <div className="overflow-hidden">
-                                        <div className="bg-gray-700/50 p-4 border-t border-gray-700 grid grid-cols-2 gap-2 sm:gap-4 text-sm">
-                                            <div className="text-center p-2 sm:p-3 bg-gray-800 rounded-lg">
+                                        <div className="p-4 border-t border-[var(--color-surface-border)] grid grid-cols-2 gap-2 sm:gap-4 text-sm" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                                            <div className="text-center p-2 sm:p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
                                                 <p className="text-gray-400">Partidas</p>
                                                 <p className="text-white font-bold text-lg">{jogador.partidas}</p>
                                             </div>
-                                            <div className="text-center p-2 sm:p-3 bg-gray-800 rounded-lg">
+                                            <div className="text-center p-2 sm:p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
                                                 <p className="text-green-400">Vitórias</p>
                                                 <p className="text-white font-bold text-lg">{jogador.vitorias}</p>
                                             </div>
-                                            <div className="text-center p-2 sm:p-3 bg-gray-800 rounded-lg">
+                                            <div className="text-center p-2 sm:p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
                                                 <p className="text-gray-400">Empates</p>
                                                 <p className="text-white font-bold text-lg">{jogador.empates}</p>
                                             </div>
-                                            <div className="text-center p-2 sm:p-3 bg-gray-800 rounded-lg">
+                                            <div className="text-center p-2 sm:p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
                                                 <p className="text-red-400">Derrotas</p>
                                                 <p className="text-white font-bold text-lg">{jogador.derrotas}</p>
                                             </div>
-                                            <div className="text-center p-2 sm:p-3 bg-gray-800 rounded-lg">
-                                                <p className="text-gray-400">Média Vitórias/Jogo</p>
-                                                <p className="text-white font-bold text-lg">{mediaVitoriasJogo(jogador)}%</p>
+                                            {/* Win rate progress bar — full width */}
+                                            <div className="col-span-2 rounded-lg p-3" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+                                                <div className="flex justify-between mb-2">
+                                                    <p className="text-gray-400 text-xs">Taxa de Vitórias</p>
+                                                    <p className="text-white text-xs font-bold">{mediaVitoriasJogo(jogador)}%</p>
+                                                </div>
+                                                <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                                                    <div
+                                                        className="h-full rounded-full transition-all duration-700"
+                                                        style={{
+                                                            width: `${Math.min(winRate, 100)}%`,
+                                                            background: 'linear-gradient(to right, var(--color-brand-pitch), var(--color-brand-grass))'
+                                                        }}
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="text-center p-2 sm:p-3 bg-gray-800 rounded-lg">
+                                            <div className="col-span-2 text-center p-2 sm:p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
                                                 <p className="text-gray-400">Score do Jogador</p>
                                                 <p className="text-white font-bold text-lg">{scoreJogador(jogador)}🔥</p>
                                             </div>

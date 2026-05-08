@@ -1,16 +1,42 @@
 @import "tailwindcss";
 
+@theme {
+  /* ── Brand Palette ── */
+  --color-brand-pitch:   #0d7a3e;
+  --color-brand-grass:   #16a34a;
+  --color-brand-score:   #22d3ee;
+  --color-brand-gold:    #f59e0b;
+  --color-brand-silver:  #94a3b8;
+  --color-brand-bronze:  #b45309;
+
+  /* ── Surface Tokens ── */
+  --color-surface-base:   #1a1f2e;
+  --color-surface-card:   #232938;
+  --color-surface-raised: #2d3347;
+  --color-surface-border: rgba(255,255,255,0.08);
+
+  /* ── Typography ── */
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: var(--color-surface-base);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-surface-base); }
+::-webkit-scrollbar-thumb { background: var(--color-surface-raised); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-brand-score); }
