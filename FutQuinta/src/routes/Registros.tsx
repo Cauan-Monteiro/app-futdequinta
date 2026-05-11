@@ -97,6 +97,168 @@ function TrashIcon({ className }: { className?: string }) {
   )
 }
 
+// ── Stat Badge ─────────────────────────────────────────────────────────────────
+
+function StatBadge({ label, color }: { label: string; color: 'red' | 'gray' | 'orange' }) {
+  const styles: Record<string, string> = {
+    red:    'bg-red-500/20 text-red-400 border-red-500/30',
+    gray:   'bg-gray-500/20 text-gray-400 border-gray-500/30',
+    orange: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+  }
+  return (
+    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${styles[color]}`}>{label}</span>
+  )
+}
+
+// ── Impact Modal ───────────────────────────────────────────────────────────────
+
+function ImpactModal({
+  partida,
+  jogadores,
+  onConfirm,
+  onCancel,
+}: {
+  partida: PartidaSalva
+  jogadores: Jogador[]
+  onConfirm: () => Promise<void>
+  onCancel: () => void
+}) {
+  const [countdown, setCountdown] = useState(5)
+  const [confirming, setConfirming] = useState(false)
+
+  useEffect(() => {
+    if (countdown === 0) return
+    const t = setTimeout(() => setCountdown(c => c - 1), 1000)
+    return () => clearTimeout(t)
+  }, [countdown])
+
+  function calcImpacto(jt: { id: number; time: string }) {
+    const base = { partidas: -1, pontos: 0, vitorias: 0, derrotas: 0, empates: 0 }
+    if (partida.vencedor === 'Empate') return { ...base, pontos: -1, empates: -1 }
+    if (jt.time === partida.vencedor)  return { ...base, pontos: -3, vitorias: -1 }
+    return { ...base, derrotas: -1 }
+  }
+
+  const jogadoresAzul     = partida.jogadores.filter(j => j.time === 'Azul')
+  const jogadoresVermelho = partida.jogadores.filter(j => j.time === 'Vermelho')
+  const jogadoresMap      = new Map(jogadores.map(j => [j.id, j.nome]))
+  const dataFormatada     = new Date(partida.data).toLocaleString('pt-BR', {
+    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  })
+
+  const handleConfirm = async () => {
+    setConfirming(true)
+    await onConfirm()
+  }
+
+  const renderJogadorCard = (jt: { id: number; time: string }) => {
+    const impacto = calcImpacto(jt)
+    const nome    = jogadoresMap.get(jt.id) ?? `Jogador ${jt.id}`
+    return (
+      <div key={jt.id} className="rounded-lg p-2.5 border" style={{ backgroundColor: 'var(--color-surface-raised)', borderColor: 'var(--color-surface-border)' }}>
+        <p className="text-white text-xs font-semibold truncate mb-1.5">{nome}</p>
+        <div className="flex flex-wrap gap-1">
+          {impacto.pontos  !== 0 && <StatBadge label={`${impacto.pontos} pts`} color="red" />}
+          <StatBadge label="-1 part." color="gray" />
+          {impacto.vitorias !== 0 && <StatBadge label="-1 vit." color="orange" />}
+          {impacto.derrotas !== 0 && <StatBadge label="-1 der." color="orange" />}
+          {impacto.empates  !== 0 && <StatBadge label="-1 emp." color="orange" />}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center"
+      onClick={onCancel}
+    >
+      <motion.div
+        initial={{ y: '100%', opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: '100%', opacity: 0 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+        className="w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl shadow-2xl border overflow-y-auto"
+        style={{ backgroundColor: 'var(--color-surface-card)', borderColor: 'var(--color-surface-border)', maxHeight: '90vh' }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="p-5 border-b" style={{ borderColor: 'var(--color-surface-border)' }}>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-9 h-9 rounded-full bg-red-500/20 flex items-center justify-center shrink-0">
+              <TrashIcon className="w-4 h-4 text-red-400" />
+            </div>
+            <div>
+              <h3 className="text-white font-bold text-lg leading-none">Excluir Partida</h3>
+              <p className="text-gray-500 text-xs mt-0.5">{dataFormatada}</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-4 py-3 rounded-xl" style={{ backgroundColor: 'var(--color-surface-raised)' }}>
+            <div className="text-center">
+              <span className="text-blue-400 text-4xl leading-none" style={{ fontFamily: 'var(--font-display)' }}>{partida.golsAzul}</span>
+              <p className="text-blue-400/60 text-[10px] uppercase tracking-widest mt-0.5">Azul</p>
+            </div>
+            <span className="text-gray-600 font-bold text-lg">×</span>
+            <div className="text-center">
+              <span className="text-red-400 text-4xl leading-none" style={{ fontFamily: 'var(--font-display)' }}>{partida.golsVermelho}</span>
+              <p className="text-red-400/60 text-[10px] uppercase tracking-widest mt-0.5">Vermelho</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Impact preview */}
+        <div className="p-5">
+          <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Impacto nos jogadores</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Time Azul</p>
+              <div className="space-y-2">{jogadoresAzul.map(renderJogadorCard)}</div>
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-2">Time Vermelho</p>
+              <div className="space-y-2">{jogadoresVermelho.map(renderJogadorCard)}</div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center gap-2 p-3 rounded-xl border border-amber-500/30 bg-amber-500/5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-amber-400 shrink-0">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+            <p className="text-amber-300 text-xs">Esta ação é irreversível. Os stats acima serão revertidos permanentemente.</p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex gap-3 p-5 pt-0">
+          <button
+            onClick={onCancel}
+            disabled={confirming}
+            className="flex-1 py-3 rounded-xl text-sm font-semibold text-gray-300 transition-colors disabled:opacity-50"
+            style={{ backgroundColor: 'var(--color-surface-raised)' }}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleConfirm}
+            disabled={countdown > 0 || confirming}
+            className="flex-1 py-3 rounded-xl text-sm font-semibold text-white transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+            style={{ background: countdown > 0 || confirming ? 'var(--color-surface-raised)' : 'linear-gradient(135deg, #dc2626, #991b1b)' }}
+          >
+            {confirming ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="spinner" style={{ width: 14, height: 14 }} />
+              </span>
+            ) : countdown > 0 ? `Aguarde ${countdown}s` : 'Confirmar exclusão'}
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 // ── Confirm Delete Modal ───────────────────────────────────────────────────────
 
 function ConfirmModal({
@@ -356,10 +518,10 @@ function TabUsuarios({ jogadores, addToast }: { jogadores: Jogador[]; addToast: 
 
 // ── Tab: Partidas ──────────────────────────────────────────────────────────────
 
-function TabPartidas({ addToast }: { jogadores?: Jogador[]; addToast: (m: string, t?: any) => void }) {
+function TabPartidas({ jogadores = [], addToast }: { jogadores?: Jogador[]; addToast: (m: string, t?: any) => void }) {
   const [partidas, setPartidas] = useState<PartidaSalva[]>([])
   const [carregando, setCarregando] = useState(true)
-  const [confirmDelete, setConfirmDelete] = useState<number | null>(null)
+  const [impactPartida, setImpactPartida] = useState<PartidaSalva | null>(null)
 
   useEffect(() => {
     setCarregando(true)
@@ -372,11 +534,20 @@ function TabPartidas({ addToast }: { jogadores?: Jogador[]; addToast: (m: string
       .finally(() => setCarregando(false))
   }, [])
 
-  const handleDelete = (id: number) => {
-    // UI only — backend not implemented yet
-    setPartidas(prev => prev.filter(p => p.id !== id))
-    setConfirmDelete(null)
-    addToast('Partida excluída! (backend em breve)', 'info')
+  const handleDelete = async (id: number) => {
+    try {
+      const res = await fetch(`${API_URL}/partidas/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${Cookies.get('token_acesso')}` },
+      })
+      if (!res.ok) throw new Error()
+      setPartidas(prev => prev.filter(p => p.id !== id))
+      setImpactPartida(null)
+      addToast('Partida excluída com sucesso!', 'success')
+    } catch {
+      addToast('Erro ao excluir partida.', 'error')
+      setImpactPartida(null)
+    }
   }
 
   const totalGols = partidas.reduce((acc, p) => acc + p.golsAzul + p.golsVermelho, 0)
@@ -463,7 +634,7 @@ function TabPartidas({ addToast }: { jogadores?: Jogador[]; addToast: (m: string
 
                   {/* Delete */}
                   <button
-                    onClick={() => setConfirmDelete(partida.id)}
+                    onClick={() => setImpactPartida(partida)}
                     className="opacity-0 group-hover:opacity-100 p-2 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-150 cursor-pointer shrink-0"
                     title="Excluir partida"
                   >
@@ -477,12 +648,12 @@ function TabPartidas({ addToast }: { jogadores?: Jogador[]; addToast: (m: string
       )}
 
       <AnimatePresence>
-        {confirmDelete !== null && (
-          <ConfirmModal
-            title="Excluir partida?"
-            message="Esta ação é irreversível. A partida e todos os dados vinculados serão removidos. As estatísticas dos jogadores não serão revertidas automaticamente."
-            onConfirm={() => handleDelete(confirmDelete)}
-            onCancel={() => setConfirmDelete(null)}
+        {impactPartida !== null && (
+          <ImpactModal
+            partida={impactPartida}
+            jogadores={jogadores}
+            onConfirm={() => handleDelete(impactPartida.id)}
+            onCancel={() => setImpactPartida(null)}
           />
         )}
       </AnimatePresence>

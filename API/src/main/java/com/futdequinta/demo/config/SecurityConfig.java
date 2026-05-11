@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/partidas", "/api/jogadores").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/company").hasRole("JOGADOR")
                         .requestMatchers(HttpMethod.POST, "/api/partidas").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/partidas/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/usuarios").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/vincular-jogador").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/alterar-role").hasRole("ADMIN")

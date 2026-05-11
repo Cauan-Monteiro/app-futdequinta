@@ -40,7 +40,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = Cookies.get('token_acesso');
-    if (token) aplicarToken(token);
+    if (!token) return;
+    try {
+      const decoded = jwtDecode<{ exp: number }>(token);
+      if (decoded.exp * 1000 < Date.now()) {
+        Cookies.remove('token_acesso');
+        return;
+      }
+    } catch {
+      Cookies.remove('token_acesso');
+      return;
+    }
+    aplicarToken(token);
   }, []);
 
   return (
