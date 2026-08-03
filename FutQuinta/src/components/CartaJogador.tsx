@@ -37,13 +37,13 @@ export default function CartaJogador({ jogador, notaGeral }: CartaProps) {
             
             {/* 2. Barra de Status Lateral (z-30 para ficar acima do jogador) */}
             <div className="flex flex-col items-center absolute top-[60px] left-[80px] w-[70px] h-[200px] text-center z-30">
-                <span className="text-[3rem] font-medium mt-[20px] text-shadow-[3px_3px_5px_rgb(0_0_0/_1)]">{notaGeral}</span>
-                <span className="text-[1.5rem] -mt-[15px] text-shadow-[3px_3px_2px_rgb(0_0_0/_1)]">
+                <span className="text-[3.2rem] leading-none mt-[20px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" style={{ fontFamily: 'var(--font-display)' }}>{notaGeral}</span>
+                <span className="text-[1.6rem] -mt-[10px] text-shadow-[3px_3px_2px_rgb(0_0_0/_1)]" style={{ fontFamily: 'var(--font-display)' }}>
                     {jogador.posicao === "Goleiro" ? "GK" : "ST"}
                 </span>
                 
                 {/* Posição badge */}
-                <span className="text-[0.65rem] font-bold mt-2 text-cyan-300 uppercase tracking-widest">
+                <span className="text-[0.65rem] font-bold mt-2 uppercase tracking-widest" style={{ color: 'var(--color-brand-score)' }}>
                     {jogador.posicao === "Goleiro" ? "Goleiro" : "Linha"}
                 </span>
             </div>
@@ -56,7 +56,7 @@ export default function CartaJogador({ jogador, notaGeral }: CartaProps) {
                 
                 {/* Nome do Jogador */}
                 <h2 className="text-[1.2rem] font-bold drop-shadow-[2px_2px_2px_rgba(0,0,0,1)]">
-                    <span className="inline-block w-full border-b-2 border-[#24ccff] pb-1 px-4">
+                    <span className="inline-block w-full border-b-2 border-(--color-brand-score) pb-1 px-4">
                         {jogador.nome}
                     </span>
                 </h2>
@@ -65,17 +65,17 @@ export default function CartaJogador({ jogador, notaGeral }: CartaProps) {
                 <div className="flex justify-center w-full mt-[25px]">
                     
                     {/* Coluna 1 */}
-                    <div className="w-[45%] h-[80px] -mt-[40px] border-r border-[#24ccff] flex flex-col items-center">
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.pace ?? 0}</span> RIT</p>
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.shot ?? 0}</span> CHU</p>
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.pass ?? 0}</span> PAS</p>
+                    <div className="w-[45%] h-[80px] -mt-[40px] border-r border-(--color-brand-score) flex flex-col items-center">
+                        <p className="text-[1.2rem] m-0"><span className="font-bold" style={{ fontFamily: 'var(--font-display)' }}>{jogador.atributos?.pace ?? 0}</span> PAC</p>
+                        <p className="text-[1.2rem] m-0"><span className="font-bold" style={{ fontFamily: 'var(--font-display)' }}>{jogador.atributos?.shot ?? 0}</span> SHO</p>
+                        <p className="text-[1.2rem] m-0"><span className="font-bold" style={{ fontFamily: 'var(--font-display)' }}>{jogador.atributos?.pass ?? 0}</span> PAS</p>
                     </div>
 
                     {/* Coluna 2 */}
                     <div className="w-[45%] h-[80px] -mt-[40px] flex flex-col items-center">
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.attack ?? 0}</span> ATA</p>
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.defense ?? 0}</span> DEF</p>
-                        <p className="text-[1.2rem] m-0"><span className="font-bold">{jogador.atributos?.physical ?? 0}</span> FIS</p>
+                        <p className="text-[1.2rem] m-0"><span className="font-bold" style={{ fontFamily: 'var(--font-display)' }}>{jogador.atributos?.attack ?? 0}</span> DRI</p>
+                        <p className="text-[1.2rem] m-0"><span className="font-bold" style={{ fontFamily: 'var(--font-display)' }}>{jogador.atributos?.defense ?? 0}</span> DEF</p>
+                        <p className="text-[1.2rem] m-0"><span className="font-bold" style={{ fontFamily: 'var(--font-display)' }}>{jogador.atributos?.physical ?? 0}</span> PHY</p>
                     </div>
                 </div>
             </div>

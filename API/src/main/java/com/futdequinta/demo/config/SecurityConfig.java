@@ -33,7 +33,8 @@ public class SecurityConfig {
                         "http://localhost",
                         "http://localhost:5173",
                         "http://129.148.62.223:443",
-                        "https://futquinta.moteirodev.shop/"
+                        "https://futquinta.moteirodev.shop/",
+                        "https://futquinta.monteirodev.com.br/"
                     ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));

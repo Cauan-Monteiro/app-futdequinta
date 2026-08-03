@@ -11,6 +11,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Libera todas as rotas da API
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Libera todos os verbos
-                .allowedOrigins("https://futquinta.moteirodev.shop","http://localhost");
+                .allowedOrigins("https://futquinta.moteirodev.shop", "https://futquinta.monteirodev.com.br", "http://localhost");
     }
 }
